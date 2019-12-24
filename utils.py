@@ -262,9 +262,9 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3):
 	assert n < len(set(mylist)), "n is out of valid range!"
 	
 	## List of n most frequent cell lines
-	x = list(map(lambda x : x[0], Counter(mylist).most_common(n)))
+	y = list(map(lambda x : x[0], Counter(mylist).most_common(n)))
 	
-	parse_data = [line for line in train if line[0][0] in x] 
+	parse_data = [line for line in train if line[0][k] in y] 
 	
 	return parse_data
 	
