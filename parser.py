@@ -9,7 +9,9 @@ import cmapPy.pandasGEXpress.write_gctx as wg
 __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
-def parse_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
+
+
+def parsing_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
 	"""
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
@@ -103,7 +105,7 @@ def parse_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_
 	
 	
 
-def parse_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
+def parsing_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
 	"""
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
