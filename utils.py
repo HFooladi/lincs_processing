@@ -7,15 +7,21 @@ from tqdm import tqdm
 from collections import Counter
 
 
+__author__ = "Hosein Fooladi"
+__email__ = "fooladi.hosein@gmail.com"
+
+
 
 def print_statistics(dataset_dir):
 	"""
 	This function takes the directory of dataset and
 	returns some useful statistics about the data.
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
+	Input:
+		Mandatory:
+		- :param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -54,11 +60,15 @@ def print_most_frequent(dataset_dir, n=3):
 	and returns The n most frequent cell lines, compounds and
 	doses in the dataset.
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params n: An integern which determine number of frequent statistics we want 
-	to retrieve.
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:param n (int): An integern which determine number of frequent statistics we want 
+		to retrieve. Default=3.
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -95,13 +105,20 @@ def cell_line_frequent(dataset_dir, n=3):
 	and parse the data to keep only the data that belongs to n 
 	most frequent cell lines.
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params n: An integern which determine number of frequent statistics we want 
-	to retrieve.
-	:params output: A list containing data that belongs to n most frequent
-	cell lines.	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:param n (int): An integern which determine number of frequent statistics we want 
+		to retrieve. Default=3.
+		
+	Output:
+		-:param parse_data (list): A list containing data that belongs to n most frequent
+		cell lines.
+		
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -139,13 +156,18 @@ def cell_line_list(dataset_dir, cells = ['MCF7']):
 	This function takes the directory of dataset and a list cells,
 	and parse the data to keep only the data that belongs to cells list.
 	
-	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params cells: list of cell lines that we want to keep their data 
-	to retrieve.
-	:params output: A list containing data that belongs to desired list.	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:param cells (list of strings): list of cell lines that we want to keep their data 
+		to retrieve. Default=['MCF7']
+		
+	Output:
+		-:param parse_data (list): A list containing data that belongs to desired list.	
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -176,19 +198,25 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7']):
 	The output will be a list of desired parsed dataset. 
 	
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params indicator: it must be an integer from 0 1 and 2 that shows whether
-	we want to retrieve the data based on cells, compound or dose.
-	0: cell_lines   
-	1:compounds
-	2:doses	
-	:params query: list of cells or compounds or doses that we want to retrieve.
-	The list depends on the indicator. If the indicator is 0, you should enter the
-	list of desired cell lines and so on. 
-
-	:params output: A list containing data that belongs to desired list.	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		we want to retrieve the data based on cells, compound or dose.
+		0: cell_lines   
+		1:compounds
+		2:doses	
+		Default=0 (cell_lines)
+		-:params query (list): list of cells or compounds or doses that we want to retrieve.
+		The list depends on the indicator. If the indicator is 0, you should enter the
+		list of desired cell lines and so on. Default=['MCF7']
+	
+	Output:
+		-:params parse_data (list): A list containing data that belongs to desired list.	
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -221,20 +249,25 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3):
 	and a n which how much frequent items you want to keep.
 	The output will be a list of desired parsed dataset. 
 	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		we want to retrieve the data based on cells, compound or dose.
+		0: cell_lines   
+		1:compounds
+		2:doses
+		Default=0	
+		-:params n (int): number of most frequent cells or compounds or doses that we want to retrieve.
+		The list depends on the indicator. If the indicator is 0, you should enter the
+		number of desired cell lines and so on. Default=3 
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params indicator: it must be an integer from 0 1 and 2 that shows whether
-	we want to retrieve the data based on cells, compound or dose.
-	0: cell_lines   
-	1:compounds
-	2:doses	
-	:params n: number of most frequent cells or compounds or doses that we want to retrieve.
-	The list depends on the indicator. If the indicator is 0, you should enter the
-	number of desired cell lines and so on. 
-
-	:params output: A list containing data that belongs to desired list.	
+	Output:
+		-:params parse_data: A list containing data that belongs to desired list.	
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -275,13 +308,19 @@ def parse_dose_range(dataset_dir, dose_min=0, dose_max=5):
 	This function takes the directory of dataset minimum and maximum dose
 	and return a list of data that are within the desired range. 
 	
-	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-	:params dose_min: minimum dose (int) 
-	:params dose_max: maximum_dose (int)
-	:params output: A list containing data that belongs to desired list.	
+	Input:
+		Mandatory:
+		-:param dataset_dir: It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:params dose_min (int): minimum dose. Default=0 
+		-:params dose_max (int): maximum_dose. Default=5
+		
+	Output:
+		-:params parse_data: A list containing data that belongs to desired list (
+		Desired range of doses).	
 	"""
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
