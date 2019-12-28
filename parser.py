@@ -6,12 +6,37 @@ from collections import Counter
 from cmapPy.pandasGEXpress.parse import parse
 import cmapPy.pandasGEXpress.write_gctx as wg
 
+__author__ = "Hosein Fooladi"
+__email__ = "fooladi.hosein@gmail.com"
+
 def parse_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
 	"""
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
 	based on the inputs. 
-	Output list (Train, Validation, Test) Format:
+
+	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a gctx file. e.g., valid argument is something like this:
+		'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
+		-:param inst_info_dir (str): directory of inst_info. It contains the information about the
+		experiment, perturbation type and cell line. For example:
+		'./Data/inst_info.txt'
+		-:param gene_info_dir (str): directory of gene_info. It contains the information about the genes.
+		For example:
+		'./Data/gene_info.txt'
+		
+		Optional:
+		-:param pert_type (str): String object that determine which perturbation type you want to parse.
+		Default='trt_cp'
+		-:landmarks (bool): boolean which determines whether you want to just keep landmark genes
+		after parsing or you want to keep all the genes. Default=True
+		
+	Output:
+		-:param parse_list (list)
+		Output list (Train, Validation, Test) Format:
 		line[0]:(cell_line,
 					drug, 
 					drug_type, 
@@ -21,18 +46,6 @@ def parse_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_
 					time_type)
 		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a gctx file. e.g., valid argument is something like this:
-	'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
-	:param inst_info_dir: directory of inst_info. It contains the information about the
-	experiment, perturbation type and cell line. For example:
-	'./Data/inst_info.txt'
-	:param gene_info_dir: directory of gene_info. It contains the information about the genes.
-	For example:
-	'./Data/gene_info.txt'
-	:param pert_type: String object that determine which perturbation type you want to parse.
-	:landmarks: boolean which determines whether you want to just keep landmark genes
-	after parsing or you want to keep all the genes.
 	"""
 	
 	assert isinstance(pert_type, str), "pert_type must be a string object"
@@ -95,7 +108,29 @@ def parse_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt_c
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
 	based on the inputs. 
-	Output list (Train, Validation, Test) Format:
+
+	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a gctx file. e.g., valid argument is something like this:
+		'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
+		-:param sig_info_dir (str): directory of sig_info. It contains the information about the
+		experiment, perturbation type and cell line. For example:
+		'./Data/sig_info.txt'
+		-:param gene_info_dir (str): directory of gene_info. It contains the information about the genes.
+		For example:
+		'./Data/gene_info.txt'
+		
+		Optional:
+		-:param pert_type (str): String object that determine which perturbation type you want to parse.
+		Default='trt_cp'
+		-:landmarks (bool): boolean which determines whether you want to just keep landmark genes
+		after parsing or you want to keep all the genes. Default=True
+		
+	Output:
+		-:param parse_list (list)
+		Output list (Train, Validation, Test) Format:
 		line[0]:(cell_line,
 					drug, 
 					drug_type, 
@@ -105,18 +140,6 @@ def parse_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt_c
 					time_type)
 		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 	
-	:param dataset_dir: It must be string file that shows the directory of the dataset.
-	dataset should be a gctx file. e.g., valid argument is something like this:
-	'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
-	:param sig_info_dir: directory of sig_info. It contains the information about the
-	experiment, perturbation type and cell line. For example:
-	'./Data/sig_info.txt'
-	:param gene_info_dir: directory of gene_info. It contains the information about the genes.
-	For example:
-	'./Data/gene_info.txt'
-	:param pert_type: String object that determine which perturbation type you want to parse.
-	:landmarks: boolean which determines whether you want to just keep landmark genes
-	after parsing or you want to keep all the genes.
 	"""
 	
 	assert isinstance(pert_type, str), "pert_type must be a string object"
