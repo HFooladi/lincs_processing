@@ -63,7 +63,7 @@ def drug_pert_retrieval(drug_info_dir, pert_info_dir, pert_type='trt_cp'):
 		-pert_supp_info(pandas.DataFrame): Pandas dataframe which contains
 		supplementary information about touchstone compounds such as 
 		mode of actions, tarfets and ...
-		pert_list (List): List of strings which indicates the compounds that
+		-pert_list (List): List of strings which indicates the compounds that
 		we have additional information for them.
 		Example: ['abiraterone', 'ABT-737', 'ABT-751', 'AC-55649',...]
 		
@@ -79,13 +79,13 @@ def drug_pert_retrieval(drug_info_dir, pert_info_dir, pert_type='trt_cp'):
 	
 	assert pert_type in pert_info.pert_type.unique(), "pert_type should be in the list of available perturbations"
 	
-	x = pert_info[(pert_info.pert_type=='trt_cp') & (pert_info.is_touchstone)]
+	x = pert_info[(pert_info.pert_type==pert_type) & (pert_info.is_touchstone)]
 	
 	print("=================================================================")
 	print("Number of Touchstone of {}: {}".format(pert_type, x.shape[0]))
 	
 	pert_supp_info = drug_info[drug_info.pert_iname.isin(x.pert_iname)]
-	pert_list = list(y.pert_iname)
+	pert_list = list(pert_supp_info.pert_iname)
 	
 	print("Number of {} that we have additional information about them: {}".format(pert_type, len(pert_list)))
 
