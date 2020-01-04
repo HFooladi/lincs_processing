@@ -342,3 +342,88 @@ def parse_dose_range(dataset_dir, dose_min=0, dose_max=5):
 	
 	print("Number of Data after parsing: {}".format(len(parse_data)))
 	return parse_data
+	
+	
+	
+	
+def parse_list_v2(dataset_dir, indicator=0, query=['MCF7']):
+	"""
+	This function takes the directory of dataset, indicator that indicates
+	whether you want to subset the data based on cell line, compound, dose, time, touchstone,
+	clinical phase, MOA or target. Moreover, it takes a list which shows what part of the data you want to keep.
+	The output will be a list of desired parsed dataset. 
+	
+	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark_allinfo.pkl'
+		
+		The pickle file should be as the following:
+		list Format:
+		line[0]:(cell_line,
+					drug, 
+					drug_type, 
+					does, 
+					does_type, 
+					time, 
+					time_type,
+					touchstone,
+					clinical phase,
+					moa,
+					target)
+		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+		
+		Optional:
+		-:params indicator (int): it must be an integer from 0 1 2 3 4 5 6 7 that shows whether
+		we want to retrieve the data based on cells, compound, dose, touchstone, clinical phase, moa or target.
+		0: cell_lines   
+		1: compounds
+		2: doses
+		3: time		
+		4: touchstone
+		5: clinical phase
+		6: moa
+		7: target
+		Default=0 (cell_lines)
+		-:params query (list): list of cells or compounds or doses or time or touchstone or clinical phase or MOA or target that we want to retrieve.
+		The list depends on the indicator. If the indicator is 0, you should enter the
+		list of desired cell lines and so on. Default=['MCF7']
+	
+	Output:
+		-:params parse_data (list): A list containing data that belongs to desired list.	
+	"""
+	
+	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
+	assert isinstance(indicator, int), "The indicator must be an int object"
+	assert indicator in [0, 1, 2, 3, 4, 5, 6, 7], "You should choose indicator from 0, 1, 2, 3, 4, 5, 6, 7 range"
+	assert isinstance(query, list), "The parameter query must be a list"
+		
+	print("=================================================================")
+	print("Data Loading..")
+	with open(dataset_dir, "rb") as f:
+		train = pickle.load(f)
+		
+	mapping = {0:0, 1:1, 2:3, 3:5, 4:7, 5:8, 6:9, 7:10}
+	k = mapping[indicator]
+	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses', 3:'time', 4:'tochstone', 5:'clinical_phase', 6:'moa', 7:'target'}
+	
+	print("Number of Train Data: {}".format(len(train)))
+	print("You are parsing the data base on {}". format(mapping_name[indicator]))
+	
+	parse_data =[]
+	if indicator in [0, 1, 2, 3, 4]:
+		parse_data = [line for line in train if line[0][k] in query] 
+		
+	elif indicator in [5, 6, 7]:
+		for line in train:
+			tmp = line[0][k][0].split('|')
+			for a in tmp:
+				if a in query:
+					parse_data.append(line)
+					break
+	
+	print("Number of Data after parsing: {}".format(len(parse_data)))
+	return parse_data
+	
