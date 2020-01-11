@@ -300,6 +300,73 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3):
 	parse_data = [line for line in train if line[0][k] in y] 
 	
 	return parse_data
+
+
+
+
+def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3):
+	"""
+	This function takes the directory of dataset, indicator that indicates
+	whether you want to subset the data based on cell line, compound or dose,
+	and a start and end which shows what chunk of data is desirable.
+	E.g., if start=0 and end=3, you are subsetting 3 most frequent data.
+	The output will be a list of desired parsed dataset. 
+	
+	Input:
+		Mandatory:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+		dataset should be a pickle file. e.g., valid argument is something like this:
+		'./Data/level3_trt_cp_landmark.pkl'
+		
+		Optional:
+		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		we want to retrieve the data based on cells, compound or dose.
+		0: cell_lines   
+		1:compounds
+		2:doses
+		Default=0	
+		-:params start: indicates the start of the list you want to subset. Default=0
+		-:params end: indicates the end of the list you want to subset. Default=3
+	
+	Output:
+		-:params parse_data: A list containing data that belongs to desired list.	
+	"""
+	
+	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
+	assert isinstance(indicator, int), "The indicator must be an int object"
+	assert indicator in [0, 1, 2], "You should choose indicator from 0, 1, 2 range"
+	assert isinstance(start, int), "The parameter start must be an integer"
+	assert isinstance(end, int), "The parameter end must be an integer"
+	assert start <= end, "The start should be less than the end!!"
+
+
+		
+	print("=================================================================")
+	print("Data Loading..")
+	with open(dataset_dir, "rb") as f:
+		train = pickle.load(f)
+		
+	mapping = {0:0, 1:1, 2:3}
+	k = mapping[indicator]
+	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses'}
+	
+	mylist = []
+
+	for i in range(len(train)):
+		mylist.append(train[i][0][k])
+		
+	print("Number of unique {}: {}".format(mapping_name[indicator], len(set(mylist))))	
+	
+	assert end < len(set(mylist)), "end is out of valid range!"
+	
+	## List of n most frequent cell lines
+	y = list(map(lambda x : x[0], Counter(mylist).most_common()))[start:end]
+	
+	print("Desired {}: {}".format(mapping_name[indicator], y))
+
+	parse_data = [line for line in train if line[0][k] in y] 
+	
+	return parse_data
 	
 	
 	
