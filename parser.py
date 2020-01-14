@@ -191,7 +191,7 @@ def parsing_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt
 	
 	parse_list = []
 	for i in range(query_trt.shape[0]):
-		parse_list.append([(query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i], query_trt.pert_dose[i], query_trt.pert_dose_unit[i], query_trt.pert_time[i], query_trt.pert_time_unit[i]), np.array(query_gctoo.data_df.iloc[:,i])])
+		parse_list.append([(query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i], float(query_trt.pert_dose[i]), query_trt.pert_dose_unit[i], query_trt.pert_time[i], query_trt.pert_time_unit[i]), np.array(query_gctoo.data_df.iloc[:,i])])
 	
 	
 	return parse_list
