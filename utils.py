@@ -247,7 +247,7 @@ def cell_line_list(dataset_dir, cells = ['MCF7'], data=None):
 def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
 	"""
 	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound or dose,
+	whether you want to subset the data based on cell line, compound, dose, or time
 	and a list which shows what part of the data you want to keep.
 	The output will be a list of desired parsed dataset. 
 	
@@ -259,11 +259,12 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
 		'./Data/level3_trt_cp_landmark.pkl'
 		
 		Optional:
-		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
 		we want to retrieve the data based on cells, compound or dose.
 		0: cell_lines   
 		1:compounds
 		2:doses	
+		3:time
 		Default=0 (cell_lines)
 		-:params query (list): list of cells or compounds or doses that we want to retrieve.
 		The list depends on the indicator. If the indicator is 0, you should enter the
@@ -283,7 +284,7 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
 	
 	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
 	assert isinstance(indicator, int), "The indicator must be an int object"
-	assert indicator in [0, 1, 2], "You should choose indicator from 0, 1, 2 range"
+	assert indicator in [0, 1, 2, 3], "You should choose indicator from 0, 1, 2 range"
 	assert isinstance(query, list), "The parameter query must be a list"
 		
 	print("=================================================================")
@@ -295,9 +296,9 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
 		assert isinstance(data, list), "The data must be a list object"
 		train = data
 		
-	mapping = {0:0, 1:1, 2:3}
+	mapping = {0:0, 1:1, 2:3, 3:5}
 	k = mapping[indicator]
-	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses'}
+	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses', 3:'time'}
 	
 	print("Number of Train Data: {}".format(len(train)))
 	print("You are parsing the data base on {}". format(mapping_name[indicator]))
@@ -311,7 +312,7 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
 def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
 	"""
 	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound or dose,
+	whether you want to subset the data based on cell line, compound, dose, or time
 	and a n which how much frequent items you want to keep.
 	The output will be a list of desired parsed dataset. 
 	
@@ -322,11 +323,12 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
 		'./Data/level3_trt_cp_landmark.pkl'
 		
 		Optional:
-		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
 		we want to retrieve the data based on cells, compound or dose.
 		0: cell_lines   
 		1:compounds
 		2:doses
+		3:time
 		Default=0	
 		-:params n (int): number of most frequent cells or compounds or doses that we want to retrieve.
 		The list depends on the indicator. If the indicator is 0, you should enter the
@@ -358,9 +360,9 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
 		assert isinstance(data, list), "The data must be a list object"
 		train = data
 		
-	mapping = {0:0, 1:1, 2:3}
+	mapping = {0:0, 1:1, 2:3, 3:5}
 	k = mapping[indicator]
-	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses'}
+	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses', 3:'time'}
 	
 	mylist = []
 
@@ -385,7 +387,7 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
 def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
 	"""
 	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound or dose,
+	whether you want to subset the data based on cell line, compound, dose, or time
 	and a start and end which shows what chunk of data is desirable.
 	E.g., if start=0 and end=3, you are subsetting 3 most frequent data.
 	The output will be a list of desired parsed dataset. 
@@ -397,11 +399,12 @@ def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
 		'./Data/level3_trt_cp_landmark.pkl'
 		
 		Optional:
-		-:params indicator (int): it must be an integer from 0 1 and 2 that shows whether
+		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
 		we want to retrieve the data based on cells, compound or dose.
 		0: cell_lines   
 		1:compounds
 		2:doses
+		3:time
 		Default=0	
 		-:params start: indicates the start of the list you want to subset. Default=0
 		-:params end: indicates the end of the list you want to subset. Default=3
@@ -437,9 +440,9 @@ def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
 		assert isinstance(data, list), "The data must be a list object"
 		train = data
 		
-	mapping = {0:0, 1:1, 2:3}
+	mapping = {0:0, 1:1, 2:3, 3:5}
 	k = mapping[indicator]
-	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses'}
+	mapping_name = {0:'cell_lines', 1:'compounds', 2:'doses', 3:'time'}
 	
 	mylist = []
 
