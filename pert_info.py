@@ -117,3 +117,28 @@ def duplicate_pert_name(pert_info_dir):
 	
 	return duplicate_list
 	
+	
+	
+def mapping_id_iname(pert_info_dir):
+	"""
+	Finding a mapping (dictionary) from pert_id to pert_iname.
+	
+	Input:
+		Mandatory:
+		-pert_info_dir (str): The directory of pert_info file. E.g.,
+		'./Data/pert_info.txt'
+		
+		
+	Output:
+		-mapping (dict): A dictionary that maps pert_id to pert_iname
+		
+	"""
+
+	assert isinstance(pert_info_dir, str), "The dataset_dir must be a string object"
+	
+	pert_info = pd.read_csv(pert_info_dir, sep = '\t')
+	
+	mapping = dict(zip(pert_info.pert_id.values, pert_info.pert_iname.values))
+	
+	return mapping
+	
