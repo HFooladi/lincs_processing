@@ -12,6 +12,33 @@ __email__ = "fooladi.hosein@gmail.com"
 
 
 
+def load_pickle(dataset_dir):
+	"""
+	Loading (reading) a pickle file
+	
+	Input:
+		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+	"""
+	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
+
+	fp = open(dataset_dir, 'rb')
+	return pickle.load(fp)
+	
+	
+def write_pickle(dataset_dir, data):
+	"""
+	Writing a file (data) into a pickle file (dataset_dir)
+	
+	Input:
+		-:param dataset_dir (str): It must be string file that shows the directory for writing.
+		-:param data: the object that should be written into the pickle file.
+	"""
+	assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
+
+	fp = open(dataset_dir, 'wb')
+	pickle.dump(data, fp)
+
+
 def print_statistics(dataset_dir, data=None):
 	"""
 	This function takes the directory of dataset and
