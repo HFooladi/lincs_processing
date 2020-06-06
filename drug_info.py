@@ -14,7 +14,7 @@ from collections import Counter
 __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
-def print_drug_statistics(drug_info_dir):
+def print_drug_statistics(drug_info_dir:str):
 	"""
 	This function takes the directory of drug_info.txt
 	and print some information about perturbations.
@@ -41,7 +41,7 @@ def print_drug_statistics(drug_info_dir):
 	
 	
 	
-def drug_pert_retrieval(drug_info_dir, pert_info_dir, pert_type='trt_cp'):
+def drug_pert_retrieval(drug_info_dir:str, pert_info_dir:str, pert_type='trt_cp'):
 	"""
 	This function takes the directory of drug_info.txt, pert_info.txt, 
 	and pert_type; and return drug information correspondant to
