@@ -173,11 +173,11 @@ def parsing_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt
 		#query_trt = query_trt[query_trt.pert_dose_unit == 'um']
 	else:
 		pass
-
-    if cell_line is not None:
-        query_trt = query_trt[sig_info["cell_id"] == cell_line]
-    else:
-        pass
+	
+	if cell_line is not None:
+		query_trt = query_trt[sig_info["cell_id"] == cell_line]
+	else:
+		pass
 
 	query_ids = query_trt.sig_id
 	print("Number of samples at the end: {}".format(query_ids.shape[0]))
