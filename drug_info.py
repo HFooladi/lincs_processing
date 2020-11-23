@@ -6,6 +6,7 @@ Provided are annotations for 6,125 drug and tool compounds
  trial status, mechanism of action, protein targets, disease areas, approved indications 
  (where applicable), purity of the purchased sample, and vendor ID.
 '''
+from typing import List, Tuple
 
 import pandas as pd
 from collections import Counter
@@ -14,7 +15,7 @@ __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
 
-def print_drug_statistics(drug_info_dir: str):
+def print_drug_statistics(drug_info_dir: str) -> None:
   """
 	This function takes the directory of drug_info.txt
 	and print some information about perturbations.
@@ -48,7 +49,7 @@ def print_drug_statistics(drug_info_dir: str):
 
 def drug_pert_retrieval(drug_info_dir: str,
                         pert_info_dir: str,
-                        pert_type='trt_cp'):
+                        pert_type: str = 'trt_cp') -> Tuple[pd.DataFrame, List]:
   """
 	This function takes the directory of drug_info.txt, pert_info.txt, 
 	and pert_type; and return drug information correspondant to
@@ -69,7 +70,7 @@ def drug_pert_retrieval(drug_info_dir: str,
 	Output:
 		-pert_supp_info(pandas.DataFrame): Pandas dataframe which contains
 		supplementary information about touchstone compounds such as 
-		mode of actions, tarfets and ...
+		mode of actions, targets and ...
 		-pert_list (List): List of strings which indicates the compounds that
 		we have additional information for them.
 		Example: ['abiraterone', 'ABT-737', 'ABT-751', 'AC-55649',...]
