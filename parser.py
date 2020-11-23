@@ -10,9 +10,12 @@ __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
 
-
-def parsing_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks = True):
-	"""
+def parsing_level3_cp(dataset_dir,
+                      inst_info_dir,
+                      gene_info_dir,
+                      pert_type='trt_cp',
+                      landmarks=True):
+  """
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
 	based on the inputs.
@@ -50,63 +53,75 @@ def parsing_level3_cp(dataset_dir, inst_info_dir, gene_info_dir, pert_type = 'tr
 
 	"""
 
-	assert isinstance(pert_type, str), "pert_type must be a string object"
-	assert isinstance(landmarks, bool), "landmarks must be a boolean object"
+  assert isinstance(pert_type, str), "pert_type must be a string object"
+  assert isinstance(landmarks, bool), "landmarks must be a boolean object"
 
-	gene_info = pd.read_csv(gene_info_dir, sep="\t", dtype=str)
-	print("Number of measured genes in the dataset: {}".format(gene_info.shape[0]))
+  gene_info = pd.read_csv(gene_info_dir, sep="\t", dtype=str)
+  print("Number of measured genes in the dataset: {}".format(
+      gene_info.shape[0]))
 
-	landmark_gene_row_ids = gene_info["gene_id"][gene_info["is_lm"] == "1"]
-	print("Number of landmark genes in the dataset: {}".format(landmark_gene_row_ids.shape[0]))
+  landmark_gene_row_ids = gene_info["gene_id"][gene_info["is_lm"] == "1"]
+  print("Number of landmark genes in the dataset: {}".format(
+      landmark_gene_row_ids.shape[0]))
 
-	inst_info = pd.read_csv(inst_info_dir, sep="\t")
-	print("Number of availbale gene expression profiles: {}".format(inst_info.shape[0]))
-	print("Unique perturbation types: {}".format(inst_info.pert_type.unique()))
+  inst_info = pd.read_csv(inst_info_dir, sep="\t")
+  print("Number of availbale gene expression profiles: {}".format(
+      inst_info.shape[0]))
+  print("Unique perturbation types: {}".format(inst_info.pert_type.unique()))
 
-	assert pert_type in inst_info.pert_type.unique(), "pert_type is not valid!!"
+  assert pert_type in inst_info.pert_type.unique(), "pert_type is not valid!!"
 
-	query_trt = inst_info[inst_info["pert_type"] == pert_type]
-	print("Number of availbale gene expression profiles of {}: {}".format(pert_type, query_trt.shape[0]))
+  query_trt = inst_info[inst_info["pert_type"] == pert_type]
+  print("Number of availbale gene expression profiles of {}: {}".format(
+      pert_type, query_trt.shape[0]))
 
-	print((query_trt == '-666').sum())
-	print("Number of different pert_dose_units: {}".format(Counter(query_trt.pert_dose_unit)))
+  print((query_trt == '-666').sum())
+  print("Number of different pert_dose_units: {}".format(
+      Counter(query_trt.pert_dose_unit)))
 
-	## It needs to be better. I am supposed to modify this part!
-	if pert_type == 'trt_cp':
-		query_trt = query_trt[query_trt.pert_dose_unit != '-666']
-		query_trt = query_trt[query_trt.pert_dose_unit == 'um']
-	else:
-		pass
+  ## It needs to be better. I am supposed to modify this part!
+  if pert_type == 'trt_cp':
+    query_trt = query_trt[query_trt.pert_dose_unit != '-666']
+    query_trt = query_trt[query_trt.pert_dose_unit == 'um']
+  else:
+    pass
 
-	query_ids = query_trt.inst_id
-	print("Number of samples at the end: {}".format(query_ids.shape[0]))
+  query_ids = query_trt.inst_id
+  print("Number of samples at the end: {}".format(query_ids.shape[0]))
 
-	print("=================================================================")
-	print("Please wait while we are parsing the data ...")
+  print("=================================================================")
+  print("Please wait while we are parsing the data ...")
 
-	if landmarks:
-		query_gctoo= parse(dataset_dir, rid = landmark_gene_row_ids, cid = query_ids)
-	else:
-		query_gctoo= parse(dataset_dir, cid = query_ids)
+  if landmarks:
+    query_gctoo = parse(dataset_dir, rid=landmark_gene_row_ids, cid=query_ids)
+  else:
+    query_gctoo = parse(dataset_dir, cid=query_ids)
 
-	print("Parse Completed")
-	print("Size of the data after parsing: {}".format(query_gctoo.data_df.shape))
+  print("Parse Completed")
+  print("Size of the data after parsing: {}".format(query_gctoo.data_df.shape))
 
-	query_trt = query_trt.set_index(query_trt.inst_id)
-	query_trt = query_trt.reindex(query_gctoo.data_df.columns)
+  query_trt = query_trt.set_index(query_trt.inst_id)
+  query_trt = query_trt.reindex(query_gctoo.data_df.columns)
 
-	parse_list = []
-	for i in range(query_trt.shape[0]):
-		parse_list.append([(query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i], query_trt.pert_dose[i], query_trt.pert_dose_unit[i], query_trt.pert_time[i], query_trt.pert_time_unit[i]), np.array(query_gctoo.data_df.iloc[:,i])])
+  parse_list = []
+  for i in range(query_trt.shape[0]):
+    parse_list.append([
+        (query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i],
+         query_trt.pert_dose[i], query_trt.pert_dose_unit[i],
+         query_trt.pert_time[i], query_trt.pert_time_unit[i]),
+        np.array(query_gctoo.data_df.iloc[:, i])
+    ])
+
+  return parse_list
 
 
-	return parse_list
-
-
-
-
-def parsing_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt_cp', landmarks=True, cell_line=None):
-	"""
+def parsing_level5_cp(dataset_dir,
+                      sig_info_dir,
+                      gene_info_dir,
+                      pert_type='trt_cp',
+                      landmarks=True,
+                      cell_line=None):
+  """
 	This function takes the directory of dataset, perturbation type, and
 	whether we want to only keep lnadmark genes or not. It returns a list
 	based on the inputs.
@@ -146,70 +161,68 @@ def parsing_level5_cp(dataset_dir, sig_info_dir, gene_info_dir, pert_type = 'trt
 
 	"""
 
-	assert isinstance(pert_type, str), "pert_type must be a string object"
-	assert isinstance(landmarks, bool), "landmarks must be a boolean object"
+  assert isinstance(pert_type, str), "pert_type must be a string object"
+  assert isinstance(landmarks, bool), "landmarks must be a boolean object"
 
-	gene_info = pd.read_csv(gene_info_dir, sep="\t", dtype=str)
-	print("Number of measured genes in the dataset: {}".format(gene_info.shape[0]))
+  gene_info = pd.read_csv(gene_info_dir, sep="\t", dtype=str)
+  print("Number of measured genes in the dataset: {}".format(
+      gene_info.shape[0]))
 
-	landmark_gene_row_ids = gene_info["gene_id"][gene_info["is_lm"] == "1"]
-	print("Number of landmark genes in the dataset: {}".format(landmark_gene_row_ids.shape[0]))
+  landmark_gene_row_ids = gene_info["gene_id"][gene_info["is_lm"] == "1"]
+  print("Number of landmark genes in the dataset: {}".format(
+      landmark_gene_row_ids.shape[0]))
 
-	sig_info = pd.read_csv(sig_info_dir, sep="\t")
-	print("Number of availbale gene expression profiles: {}".format(sig_info.shape[0]))
-	print("Unique perturbation types: {}".format(sig_info.pert_type.unique()))
+  sig_info = pd.read_csv(sig_info_dir, sep="\t")
+  print("Number of availbale gene expression profiles: {}".format(
+      sig_info.shape[0]))
+  print("Unique perturbation types: {}".format(sig_info.pert_type.unique()))
 
-	assert pert_type in sig_info.pert_type.unique(), "pert_type is not valid!!"
+  assert pert_type in sig_info.pert_type.unique(), "pert_type is not valid!!"
 
-	query_trt = sig_info[sig_info["pert_type"] == pert_type]
-	print("Number of availbale gene expression profiles of {}: {}".format(pert_type, query_trt.shape[0]))
+  query_trt = sig_info[sig_info["pert_type"] == pert_type]
+  print("Number of availbale gene expression profiles of {}: {}".format(
+      pert_type, query_trt.shape[0]))
 
-	print((query_trt == '-666').sum())
-	print("Number of different pert_dose_units: {}".format(Counter(query_trt.pert_dose_unit)))
+  print((query_trt == '-666').sum())
+  print("Number of different pert_dose_units: {}".format(
+      Counter(query_trt.pert_dose_unit)))
 
-	## It needs to be better. I am supposed to modify this part!
-	if pert_type == 'trt_cp':
-		query_trt = query_trt[query_trt.pert_dose_unit != '-666']
-		#query_trt = query_trt[query_trt.pert_dose_unit == 'um']
-	else:
-		pass
-	
-	if cell_line is not None:
-		query_trt = query_trt[sig_info["cell_id"] == cell_line]
-	else:
-		pass
+  ## It needs to be better. I am supposed to modify this part!
+  if pert_type == 'trt_cp':
+    query_trt = query_trt[query_trt.pert_dose_unit != '-666']
+    #query_trt = query_trt[query_trt.pert_dose_unit == 'um']
+  else:
+    pass
 
-	query_ids = query_trt.sig_id
-	print("Number of samples at the end: {}".format(query_ids.shape[0]))
+  if cell_line is not None:
+    query_trt = query_trt[sig_info["cell_id"] == cell_line]
+  else:
+    pass
 
-	print("=================================================================")
-	print("Please wait while we are parsing the data ...")
+  query_ids = query_trt.sig_id
+  print("Number of samples at the end: {}".format(query_ids.shape[0]))
 
-	if landmarks:
-		query_gctoo= parse(dataset_dir, rid = landmark_gene_row_ids, cid = query_ids)
-	else:
-		query_gctoo= parse(dataset_dir, cid = query_ids)
+  print("=================================================================")
+  print("Please wait while we are parsing the data ...")
 
-	print("Parse Completed")
-	print("Size of the data after parsing: {}".format(query_gctoo.data_df.shape))
+  if landmarks:
+    query_gctoo = parse(dataset_dir, rid=landmark_gene_row_ids, cid=query_ids)
+  else:
+    query_gctoo = parse(dataset_dir, cid=query_ids)
 
-	query_trt = query_trt.set_index(query_trt.sig_id)
-	query_trt = query_trt.reindex(query_gctoo.data_df.columns)
+  print("Parse Completed")
+  print("Size of the data after parsing: {}".format(query_gctoo.data_df.shape))
 
-	parse_list = []
-	for i in range(query_trt.shape[0]):
-		parse_list.append([(query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i], float(query_trt.pert_dose[i]), query_trt.pert_dose_unit[i], query_trt.pert_time[i], query_trt.pert_time_unit[i]), np.array(query_gctoo.data_df.iloc[:,i])])
+  query_trt = query_trt.set_index(query_trt.sig_id)
+  query_trt = query_trt.reindex(query_gctoo.data_df.columns)
 
+  parse_list = []
+  for i in range(query_trt.shape[0]):
+    parse_list.append([
+        (query_trt.cell_id[i], query_trt.pert_id[i], query_trt.pert_type[i],
+         float(query_trt.pert_dose[i]), query_trt.pert_dose_unit[i],
+         query_trt.pert_time[i], query_trt.pert_time_unit[i]),
+        np.array(query_gctoo.data_df.iloc[:, i])
+    ])
 
-	return parse_list
-
-
-
-
-
-
-
-
-
-
-
+  return parse_list
