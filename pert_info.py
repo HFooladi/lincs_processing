@@ -1,3 +1,4 @@
+from typing import List, Dict, Tuple
 import pandas as pd
 from collections import Counter
 
@@ -5,7 +6,8 @@ __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
 
-def print_pert_statistics(pert_info_dir, pert_type='trt_cp'):
+def print_pert_statistics(pert_info_dir: str,
+                          pert_type: str = 'trt_cp') -> None:
   """
 	This function takes the directory of pert_info.txt
 	file and perturbation type, and print some information about perturbations.
@@ -40,7 +42,8 @@ def print_pert_statistics(pert_info_dir, pert_type='trt_cp'):
       pert_type, x.is_touchstone.sum()))
 
 
-def pert_touchstone(pert_info_dir, pert_type='trt_cp'):
+def pert_touchstone(pert_info_dir: str,
+                    pert_type: str = 'trt_cp') -> Tuple[Dict, Dict]:
   """
 	This function takes the directory of pert_info.txt
 	file and perturbation type, and return a dictionary that 
@@ -90,7 +93,7 @@ def pert_touchstone(pert_info_dir, pert_type='trt_cp'):
   return pert_dict_id, pert_dict_iname
 
 
-def duplicate_pert_name(pert_info_dir):
+def duplicate_pert_name(pert_info_dir: str) -> List[str]:
   """
 	There are some perturbation name that maps to more than one
 	perturbation ID in Lincs dataset. Here, I am going to find those 
@@ -119,14 +122,14 @@ def duplicate_pert_name(pert_info_dir):
 
   duplicate_list = [
       name for name, count in Counter(pert_info.pert_iname).items() if count > 1
-  ]
+  ]  # type: List[str]
   print("Number of pert_iname that have multiple pert_ids: {}".format(
       len(duplicate_list)))
 
   return duplicate_list
 
 
-def mapping_id_iname(pert_info_dir):
+def mapping_id_iname(pert_info_dir: str) -> Dict:
   """
 	Finding a mapping (dictionary) from pert_id to pert_iname.
 	
