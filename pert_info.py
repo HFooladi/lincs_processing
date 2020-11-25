@@ -8,19 +8,19 @@ __email__ = "fooladi.hosein@gmail.com"
 
 def print_pert_statistics(pert_info_dir: str,
                           pert_type: str = 'trt_cp') -> None:
+  """ print pert_info statistics
+  
+  This function takes the directory of pert_info.txt
+  file and perturbation type, and print some information about perturbations.
+  
+  Parameters
+  ----------
+  pert_info_dir: str 
+  	The directory of pert_info file. E.g., './Data/pert_info.txt'
+  pert_type: str, optional (default 'trt_cp') 
+    perturbation type that you want to extractin formation 
+	about it. Default='trt_cp'
   """
-	This function takes the directory of pert_info.txt
-	file and perturbation type, and print some information about perturbations.
-	
-	Input:
-		Mandatory:
-		-pert_info_dir (str): The directory of pert_info file. E.g.,
-		'./Data/pert_info.txt'
-		
-		Optional:
-		-pert_type (str): perturbation type that you want to extract
-		information about it. Default='trt_cp'
-	"""
 
   assert isinstance(pert_info_dir,
                     str), "The dataset_dir must be a string object"
@@ -44,37 +44,36 @@ def print_pert_statistics(pert_info_dir: str,
 
 def pert_touchstone(pert_info_dir: str,
                     pert_type: str = 'trt_cp') -> Tuple[Dict, Dict]:
-  """
-	This function takes the directory of pert_info.txt
-	file and perturbation type, and return a dictionary that 
-	maps perturbations to 0 and 1 (whether they are touchstone or not)
+  """ Check the Touchstone
+
+  This function takes the directory of pert_info.txt
+  file and perturbation type, and return a dictionary that 
+  maps perturbations to 0 and 1 (whether they are touchstone or not)
+  For example: {'BRD-A00100033':1, BRD-A00150179:0, ...}
+	
+	
+  Parameters
+  ----------
+  pert_info_dir: str
+    The directory of pert_info file. E.g., './Data/pert_info.txt'
+  pert_type: str, optional (default 'trt_cp') 
+    perturbation type that you want to extractin formation 
+	about it. Default='trt_cp'
+		
+  Returns
+  -------
+  pert_dict_id: Dict 
+    A dictionary that maps perturbation ids 
+	to 0 and 1 (whether they are touchstone or not)
+	Keys are pert_id (str) and values are 0 or 1.
+	For example: {'BRD-A00100033':1, BRD-A00150179:0, ...}
+  pert_dict_iname: Dict
+    A dictionary that maps perturbation names
+	to 0 and 1 (whether they are touchstone or not)
+	Keys are pert_iname (str) and values are 0 or 1.
 	For example:
 	{'BRD-A00100033':1, BRD-A00150179:0, ...}
-	
-	
-	Input:
-		Mandatory:
-		-pert_info_dir (str): The directory of pert_info file. E.g.,
-		'./Data/pert_info.txt'
-		
-		Optional:
-		-pert_type (str): perturbation type that you want to extract
-		information about it. Default='trt_cp'
-		
-	Output:
-		-pert_dict_id (Dictionary): A dictionary that maps perturbation ids
-		to 0 and 1 (whether they are touchstone or not)
-		Keys are pert_id (str) and values are 0 or 1.
-		For example:
-		{'BRD-A00100033':1, BRD-A00150179:0, ...}
-		
-		-pert_dict_iname (Dictionary): A dictionary that maps perturbation names
-		to 0 and 1 (whether they are touchstone or not)
-		Keys are pert_iname (str) and values are 0 or 1.
-		For example:
-		{'BRD-A00100033':1, BRD-A00150179:0, ...}
-		
-	"""
+  """
 
   assert isinstance(pert_info_dir,
                     str), "The dataset_dir must be a string object"
@@ -94,26 +93,25 @@ def pert_touchstone(pert_info_dir: str,
 
 
 def duplicate_pert_name(pert_info_dir: str) -> List[str]:
+  """ Checking duplicate pert_name
+  
+  There are some perturbation name that maps to more than one
+  perturbation ID in Lincs dataset. Here, I am going to find those 
+  perturbations that have more than one IDs.
+  You can find more information about this by following this link:
+  https://clue.io/connectopedia/some_perts_have_over_one_brdid
+	
+	
+  Parameters
+  ----------
+  pert_info_dir: str
+    The directory of pert_info file. E.g., './Data/pert_info.txt'
+		
+  Returns
+  -------
+  duplicate_list: List
+    A list of pert_inames that have multiple pert_ids.		
   """
-	There are some perturbation name that maps to more than one
-	perturbation ID in Lincs dataset. Here, I am going to find those 
-	perturbations that have more than one IDs.
-	You can find more information about this by following this link:
-	https://clue.io/connectopedia/some_perts_have_over_one_brdid
-	
-	
-	Input:
-		Mandatory:
-		-pert_info_dir (str): The directory of pert_info file. E.g.,
-		'./Data/pert_info.txt'
-		
-
-		
-	Output:
-		-duplicate_list (List): A list of pert_inames that have 
-		multiple pert_ids.
-		
-	"""
 
   assert isinstance(pert_info_dir,
                     str), "The dataset_dir must be a string object"
@@ -131,16 +129,17 @@ def duplicate_pert_name(pert_info_dir: str) -> List[str]:
 
 def mapping_id_iname(pert_info_dir: str) -> Dict:
   """
-	Finding a mapping (dictionary) from pert_id to pert_iname.
+  Finding a mapping (dictionary) from pert_id to pert_iname.
 	
-	Input:
-		Mandatory:
-		-pert_info_dir (str): The directory of pert_info file. E.g.,
-		'./Data/pert_info.txt'
+  Parameters
+  ----------
+  pert_info_dir: str
+    The directory of pert_info file. E.g., './Data/pert_info.txt'
 		
-		
-	Output:
-		-mapping (dict): A dictionary that maps pert_id to pert_iname
+  Returns
+  -------
+  mapping: Dict 
+    A dictionary that maps pert_id to pert_iname
 		
 	"""
 
