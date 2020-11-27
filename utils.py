@@ -1,4 +1,5 @@
 from __future__ import unicode_literals, print_function, division
+from typing import List, Tuple, Union
 
 import pickle
 import random
@@ -10,54 +11,64 @@ __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
 
-def load_pickle(dataset_dir):
-  """
-	Loading (reading) a pickle file
+def load_pickle(dataset_dir: str) -> List:
+  """Loading (reading) a pickle file
 	
-	Input:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-	"""
+  Parameters
+  ----------
+  dataset_dir: str 
+    It must be string file that shows the directory of the dataset.
+
+  Returns
+  -------
+  List
+  """
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
 
   fp = open(dataset_dir, 'rb')
   return pickle.load(fp)
 
 
-def write_pickle(dataset_dir, data):
+def write_pickle(dataset_dir: str, data: List) -> None:
+  """Writing a file (data) into a pickle file (dataset_dir)
+
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory for writing.
+  data: List 
+    the object that should be written into the pickle file.
   """
-	Writing a file (data) into a pickle file (dataset_dir)
-	
-	Input:
-		-:param dataset_dir (str): It must be string file that shows the directory for writing.
-		-:param data: the object that should be written into the pickle file.
-	"""
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
 
   fp = open(dataset_dir, 'wb')
   pickle.dump(data, fp)
 
 
-def print_statistics(dataset_dir, data=None):
-  """
-	This function takes the directory of dataset and
-	returns some useful statistics about the data.
+def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
+  """Print data statistics
+
+  This function takes the directory of dataset and
+  returns some useful statistics about the data.
 	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
+  Parameters
+  ----------
+  param dataset_dir: str 
+    It must be string file that shows the directory of the dataset.
+	dataset should be a pickle file. e.g., valid argument is something like this:
+	'./Data/level3_trt_cp_landmark.pkl'
+				
+  data: Union[None, List], optional (default 'None')
+	It must be a list with the following format:
+	line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 		
-		Optional:
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument 
+  and returns output based on the provided data. Otherwise, it returns output 
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
 
@@ -91,30 +102,35 @@ def print_statistics(dataset_dir, data=None):
   print("Number of unique times: {}".format(len(set(times))))
 
 
-def print_most_frequent(dataset_dir, n=3, data=None):
-  """
-	This function takes the directory of dataset and integer n
-	and returns The n most frequent cell lines, compounds and
-	doses in the dataset.
+def print_most_frequent(dataset_dir: str,
+                        n: int = 3,
+                        data: Union[None, List] = None):
+  """Print most frequent cell line, compounds, and does.
+
+  This function takes the directory of dataset and integer n
+  and returns The n most frequent cell lines, compounds and
+  doses in the dataset.
 	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+  n: int, optional (default 3) 
+    An integer which determine number of frequent statistics we want 
+    to retrieve. Default=3.
+  data: Union[None, List] 
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 		
-		Optional:
-		-:param n (int): An integern which determine number of frequent statistics we want 
-		to retrieve. Default=3.
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument 
+  and returns output based on the provided data. Otherwise, it returns output 
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(n, int), "The parameter n must be an integer"
@@ -146,35 +162,43 @@ def print_most_frequent(dataset_dir, n=3, data=None):
   print("Most frequent Doses: {}".format(Counter(doses).most_common(n)))
 
 
-def cell_line_frequent(dataset_dir, n=3, data=None):
+def cell_line_frequent(dataset_dir: str,
+                       n: int = 3,
+                       data: Union[None, List] = None) -> List:
+  """Returns list of data belongs to most frequent cell lines
+  
+  This function takes the directory of dataset and integer n,
+  and parse the data to keep only the data that belongs to n 
+  most frequent cell lines.
+	
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+	dataset should be a pickle file. e.g., valid argument is something like this:
+	'./Data/level3_trt_cp_landmark.pkl'	
+
+  n: int, optional (default 3) 
+    An integer which determine number of frequent statistics we want 
+    to retrieve. Default=3.
+
+  data: Union[None, List] 
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+		
+  Returns
+  -------
+  parse_data: List 
+    A list containing data that belongs to n most frequent cell lines.
+	
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument 
+  and returns output based on the provided data. Otherwise, it returns output 
+  based on dataset_dir.
+		
   """
-	This function takes the directory of dataset and integer n,
-	and parse the data to keep only the data that belongs to n 
-	most frequent cell lines.
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:param n (int): An integern which determine number of frequent statistics we want 
-		to retrieve. Default=3.
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-	Output:
-		-:param parse_data (list): A list containing data that belongs to n most frequent
-		cell lines.
-	
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-		
-	"""
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(n, int), "The parameter n must be an integer"
@@ -198,7 +222,7 @@ def cell_line_frequent(dataset_dir, n=3, data=None):
   print("Most frequent Cell Lines: {}".format(
       Counter(cell_lines).most_common(n)))
 
-  assert n < len(set(cell_lines)), "n is out of valid range!"
+  assert n <= len(set(cell_lines)), "n is out of valid range!"
 
   ## List of n most frequent cell lines
   x = list(map(lambda x: x[0], Counter(cell_lines).most_common(n)))
