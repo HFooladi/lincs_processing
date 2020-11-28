@@ -13,10 +13,10 @@ __email__ = "fooladi.hosein@gmail.com"
 
 def load_pickle(dataset_dir: str) -> List:
   """Loading (reading) a pickle file
-	
+
   Parameters
   ----------
-  dataset_dir: str 
+  dataset_dir: str
     It must be string file that shows the directory of the dataset.
 
   Returns
@@ -36,7 +36,7 @@ def write_pickle(dataset_dir: str, data: List) -> None:
   ----------
   dataset_dir: str
     It must be string file that shows the directory for writing.
-  data: List 
+  data: List
     the object that should be written into the pickle file.
   """
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -50,23 +50,23 @@ def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
 
   This function takes the directory of dataset and
   returns some useful statistics about the data.
-	
+
   Parameters
   ----------
-  param dataset_dir: str 
+  dataset_dir: str
     It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'
-				
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
   data: Union[None, List], optional (default 'None')
-	It must be a list with the following format:
-	line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
   Note
   -----
-  If you provide the data argument, the function igonres the dataset_dir argument 
-  and returns output based on the provided data. Otherwise, it returns output 
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
   based on dataset_dir.
   """
 
@@ -104,31 +104,31 @@ def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
 
 def print_most_frequent(dataset_dir: str,
                         n: int = 3,
-                        data: Union[None, List] = None):
+                        data: Union[None, List] = None) -> None:
   """Print most frequent cell line, compounds, and does.
 
   This function takes the directory of dataset and integer n
   and returns The n most frequent cell lines, compounds and
   doses in the dataset.
-	
+
   Parameters
   ----------
   dataset_dir: str
     It must be string file that shows the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
-  n: int, optional (default 3) 
-    An integer which determine number of frequent statistics we want 
+  n: int, optional (default 3)
+    An integer which determine number of frequent statistics we want
     to retrieve. Default=3.
-  data: Union[None, List] 
+  data: Union[None, List], optional (default 'None')
     It must be a list with the following format:
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
   Note
   -----
-  If you provide the data argument, the function igonres the dataset_dir argument 
-  and returns output based on the provided data. Otherwise, it returns output 
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
   based on dataset_dir.
   """
 
@@ -166,38 +166,38 @@ def cell_line_frequent(dataset_dir: str,
                        n: int = 3,
                        data: Union[None, List] = None) -> List:
   """Returns list of data belongs to most frequent cell lines
-  
+
   This function takes the directory of dataset and integer n,
-  and parse the data to keep only the data that belongs to n 
+  and parse the data to keep only the data that belongs to n
   most frequent cell lines.
-	
+
   Parameters
   ----------
   dataset_dir: str
     It must be string file that shows the directory of the dataset.
-	dataset should be a pickle file. e.g., valid argument is something like this:
-	'./Data/level3_trt_cp_landmark.pkl'	
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
 
-  n: int, optional (default 3) 
-    An integer which determine number of frequent statistics we want 
+  n: int, optional (default 3)
+    An integer which determine number of frequent statistics we want
     to retrieve. Default=3.
 
-  data: Union[None, List] 
+  data: Union[None, List], optional (default 'None')
     It must be a list with the following format:
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-	line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
   Returns
   -------
-  parse_data: List 
+  parse_data: List
     A list containing data that belongs to n most frequent cell lines.
-	
+
   Note
   -----
-  If you provide the data argument, the function igonres the dataset_dir argument 
-  and returns output based on the provided data. Otherwise, it returns output 
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
   based on dataset_dir.
-		
+
   """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
@@ -222,9 +222,13 @@ def cell_line_frequent(dataset_dir: str,
   print("Most frequent Cell Lines: {}".format(
       Counter(cell_lines).most_common(n)))
 
-  assert n <= len(set(cell_lines)), "n is out of valid range!"
+  if n > len(set(cell_lines)):
+    import warnings
+    warnings.warn(
+        "n is greater than number of unique cell lines available in the dataset"
+    )
 
-  ## List of n most frequent cell lines
+  # List of n most frequent cell lines
   x = list(map(lambda x: x[0], Counter(cell_lines).most_common(n)))
 
   parse_data = [line for line in train if line[0][0] in x]
@@ -232,33 +236,41 @@ def cell_line_frequent(dataset_dir: str,
   return parse_data
 
 
-def cell_line_list(dataset_dir, cells=['MCF7'], data=None):
-  """
-	This function takes the directory of dataset and a list cells,
-	and parse the data to keep only the data that belongs to cells list.
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:param cells (list of strings): list of cell lines that we want to keep their data 
-		to retrieve. Default=['MCF7']
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-	Output:
-		-:param parse_data (list): A list containing data that belongs to desired list.	
+def cell_line_list(dataset_dir: str,
+                   cells: List[str] = ['MCF7'],
+                   data: Union[None, List] = None) -> List:
+  """Filter data based on desired cell line list
 
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
+  This function takes the directory of dataset and a list cells,
+  and parse the data to keep only the data that belongs to cells list.
+
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
+  cells: List[str]
+    list of cell lines that we want to keep their data to retrieve. Default=['MCF7']
+
+  data: Union[None, List], optional (default 'None')
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+  Returns
+  -------
+  parse_data: list
+    A list containing data that belongs to desired list.
+
+
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(cells, list), "The parameter cells must be a list"
@@ -280,43 +292,55 @@ def cell_line_list(dataset_dir, cells=['MCF7'], data=None):
   return parse_data
 
 
-def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
+def parse_list(dataset_dir: str,
+               indicator: int = 0,
+               query=['MCF7'],
+               data: Union[None, List] = None) -> List:
+  """Filter the data based on compound, cell line, dose or time
+  
+  This function takes the directory of dataset, indicator that indicates
+  whether you want to subset the data based on cell line, compound, dose, or time
+  and a list which shows what part of the data you want to keep.
+  The output will be a list of desired parsed dataset.
+
+
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
+  indicator: int 
+    it must be an integer from 0 1 2 and 3 that shows whether
+    we want to retrieve the data based on cells, compound or dose.
+    0: cell_lines
+    1:compounds
+    2:doses
+    3:time
+    Default=0 (cell_lines)
+                  
+  query: List
+    list of cells or compounds or doses that we want to retrieve.
+    The list depends on the indicator. If the indicator is 0, you should enter the
+    list of desired cell lines and so on. Default=['MCF7']
+    
+  data: Union[None, List], optional (default 'None')
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+  Returns
+  -------
+  parse_data: List
+    A list containing data that belongs to desired list.
+
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
+  based on dataset_dir.
   """
-	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound, dose, or time
-	and a list which shows what part of the data you want to keep.
-	The output will be a list of desired parsed dataset. 
-	
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
-		we want to retrieve the data based on cells, compound or dose.
-		0: cell_lines   
-		1:compounds
-		2:doses	
-		3:time
-		Default=0 (cell_lines)
-		-:params query (list): list of cells or compounds or doses that we want to retrieve.
-		The list depends on the indicator. If the indicator is 0, you should enter the
-		list of desired cell lines and so on. Default=['MCF7']
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-	
-	Output:
-		-:params parse_data (list): A list containing data that belongs to desired list.	
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
@@ -346,47 +370,59 @@ def parse_list(dataset_dir, indicator=0, query=['MCF7'], data=None):
   return parse_data
 
 
-def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
-  """
-	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound, dose, or time
-	and a n which how much frequent items you want to keep.
-	The output will be a list of desired parsed dataset. 
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
-		we want to retrieve the data based on cells, compound or dose.
-		0: cell_lines   
-		1:compounds
-		2:doses
-		3:time
-		Default=0	
-		-:params n (int): number of most frequent cells or compounds or doses that we want to retrieve.
-		The list depends on the indicator. If the indicator is 0, you should enter the
-		number of desired cell lines and so on. Default=3 
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-	
-	Output:
-		-:params parse_data: A list containing data that belongs to desired list.
+def parse_most_frequent(dataset_dir: str,
+                        indicator: int = 0,
+                        n: int = 3,
+                        data: Union[None, List] = None) -> List:
+  """Returns most frequent data (based on cell line, compound, ...)
+  
+  This function takes the directory of dataset, indicator that indicates
+  whether you want to subset the data based on cell line, compound, dose, or time
+  and a n which how much frequent items you want to keep.
+  The output will be a list of desired parsed dataset.
 
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.		
-	"""
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
+  indicator: int, optional (default n=0) 
+    It must be an integer from 0 1 2 and 3 that shows whether
+    we want to retrieve the data based on cells, compound or dose.
+    0: cell_lines
+    1:compounds
+    2:doses
+    3:time
+    Default=0
+                 
+  n: int, optional (default n=3)
+    number of most frequent cells or compounds or doses that we want to retrieve.
+    The list depends on the indicator. If the indicator is 0, you should enter the
+    number of desired cell lines and so on. Default=3
+  
+  data: Union[None, List], optional (default 'None')
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+  Returns
+  -------
+  parse_data: List
+    A list containing data that belongs to desired list.
+
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
-  assert indicator in [0, 1,
-                       2], "You should choose indicator from 0, 1, 2 range"
+  assert indicator in [0, 1, 2,
+                       3], "You should choose indicator from 0, 1, 2, 3 range"
   assert isinstance(n, int), "The parameter n must be an integer"
 
   print("=================================================================")
@@ -414,7 +450,7 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
 
   assert n < len(set(mylist)), "n is out of valid range!"
 
-  ## List of n most frequent cell lines
+  # List of n most frequent cell lines
   y = list(map(lambda x: x[0], Counter(mylist).most_common(n)))
 
   parse_data = [line for line in train if line[0][k] in y]
@@ -422,43 +458,56 @@ def parse_most_frequent(dataset_dir, indicator=0, n=3, data=None):
   return parse_data
 
 
-def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
+def parse_chunk_frequent(dataset_dir: str,
+                         indicator: int = 0,
+                         start: int = 0,
+                         end: int = 3,
+                         data: Union[None, List] = None) -> List:
   """
-	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound, dose, or time
-	and a start and end which shows what chunk of data is desirable.
-	E.g., if start=0 and end=3, you are subsetting 3 most frequent data.
-	The output will be a list of desired parsed dataset. 
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:params indicator (int): it must be an integer from 0 1 2 and 3 that shows whether
-		we want to retrieve the data based on cells, compound or dose.
-		0: cell_lines   
-		1:compounds
-		2:doses
-		3:time
-		Default=0	
-		-:params start: indicates the start of the list you want to subset. Default=0
-		-:params end: indicates the end of the list you want to subset. Default=3
-		
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-	
-	Output:
-		-:params parse_data: A list containing data that belongs to desired list.	
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
+  
+  This function takes the directory of dataset, indicator that indicates
+  whether you want to subset the data based on cell line, compound, dose, or time
+  and a start and end which shows what chunk of data is desirable.
+  E.g., if start=0 and end=3, you are subsetting 3 most frequent data. 
+  The output will be a list of desired parsed dataset.
+
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
+  indicator: int, optional (default n=0) 
+    It must be an integer from 0 1 2 and 3 that shows whether
+    we want to retrieve the data based on cells, compound or dose.
+    0: cell_lines
+    1:compounds
+    2:doses
+    3:time
+    Default=0
+    
+  start: int 
+    indicates the start of the list you want to subset. Default=0
+  end: int 
+    indicates the end of the list you want to subset. Default=3
+
+  data: Union[None, List], optional (default 'None')
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+  Returns
+  -------
+  parse_data: List
+    A list containing data that belongs to desired list.
+
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
@@ -491,7 +540,7 @@ def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
 
   assert end < len(set(mylist)), "end is out of valid range!"
 
-  ## List of n most frequent cell lines
+  # List of n most frequent cell lines
   y = list(map(lambda x: x[0], Counter(mylist).most_common()))[start:end]
 
   print("Desired {}: {}".format(mapping_name[indicator], y))
@@ -501,34 +550,44 @@ def parse_chunk_frequent(dataset_dir, indicator=0, start=0, end=3, data=None):
   return parse_data
 
 
-def parse_dose_range(dataset_dir, dose_min=0, dose_max=5, data=None):
+def parse_dose_range(dataset_dir: str,
+                     dose_min: int = 0,
+                     dose_max: int = 5,
+                     data: Union[None, List] = None) -> List:
   """
-	This function takes the directory of dataset minimum and maximum dose
-	and return a list of data that are within the desired range. 
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir: It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark.pkl'
-		
-		Optional:
-		-:params dose_min (int): minimum dose. Default=0 
-		-:params dose_max (int): maximum_dose. Default=5
-		
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-	Output:
-		-:params parse_data: A list containing data that belongs to desired list (
-		Desired range of doses).
+  
+  This function takes the directory of dataset minimum and maximum dose
+  and return a list of data that are within the desired range.
 
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.		
-	"""
+  Parameters
+  ----------
+  dataset_dir: str
+    It must be string file that shows the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+
+  dose_min: int, optional (default dose_min=0)
+    minimum dose. Default=0
+  dose_max: int, optional (default dose_max=5) 
+    maximum_dose. Default=5
+
+  data: Union[None, List], optional (default 'None')
+    It must be a list with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+  Returns
+  --------
+  parse_data: List
+    A list containing data that belongs to desired list (
+    Desired range of doses).
+
+  Note
+  -----
+  If you provide the data argument, the function igonres the dataset_dir argument
+  and returns output based on the provided data. Otherwise, it returns output
+  based on dataset_dir.
+  """
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(dose_min, int), "The parameter dose_min must be an integer"
@@ -556,62 +615,62 @@ def parse_dose_range(dataset_dir, dose_min=0, dose_max=5, data=None):
 
 def parse_list_v2(dataset_dir, indicator=0, query=['MCF7'], data=None):
   """
-	This function takes the directory of dataset, indicator that indicates
-	whether you want to subset the data based on cell line, compound, dose, time, touchstone,
-	clinical phase, MOA or target. Moreover, it takes a list which shows what part of the data you want to keep.
-	The output will be a list of desired parsed dataset. 
-	
-	
-	Input:
-		Mandatory:
-		-:param dataset_dir (str): It must be string file that shows the directory of the dataset.
-		dataset should be a pickle file. e.g., valid argument is something like this:
-		'./Data/level3_trt_cp_landmark_allinfo.pkl'
-		
-		The pickle file should be as the following:
-		list Format:
-		line[0]:(cell_line,
-					drug, 
-					drug_type, 
-					does, 
-					does_type, 
-					time, 
-					time_type,
-					touchstone,
-					clinical phase,
-					moa,
-					target)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-		
-		Optional:
-		-:params indicator (int): it must be an integer from 0 1 2 3 4 5 6 7 that shows whether
-		we want to retrieve the data based on cells, compound, dose, touchstone, clinical phase, moa or target.
-		0: cell_lines   
-		1: compounds
-		2: doses
-		3: time		
-		4: touchstone
-		5: clinical phase
-		6: moa
-		7: target
-		Default=0 (cell_lines)
-		-:params query (list): list of cells or compounds or doses or time or touchstone or clinical phase or MOA or target that we want to retrieve.
-		The list depends on the indicator. If the indicator is 0, you should enter the
-		list of desired cell lines and so on. Default=['MCF7']
-		
-		-:param data (list): It must be a list with the following format:
-		line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type, 
-		touchstone, clinical phase, moa, target)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-	
-	Output:
-		-:params parse_data (list): A list containing data that belongs to desired list.
-		
-	Note:
-	If you provide the data argument, the function igonres the dataset_dir argument 
-	and returns output based on the provided data. Otherwise, it returns output 
-	based on dataset_dir.
-	"""
+This function takes the directory of dataset, indicator that indicates
+whether you want to subset the data based on cell line, compound, dose, time, touchstone,
+clinical phase, MOA or target. Moreover, it takes a list which shows what part of the data you want to keep.
+The output will be a list of desired parsed dataset.
+
+
+Input:
+        Mandatory:
+        -:param dataset_dir (str): It must be string file that shows the directory of the dataset.
+        dataset should be a pickle file. e.g., valid argument is something like this:
+        './Data/level3_trt_cp_landmark_allinfo.pkl'
+
+        The pickle file should be as the following:
+        list Format:
+        line[0]:(cell_line,
+                                drug,
+                                drug_type,
+                                does,
+                                does_type,
+                                time,
+                                time_type,
+                                touchstone,
+                                clinical phase,
+                                moa,
+                                target)
+        line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+        Optional:
+        -:params indicator (int): it must be an integer from 0 1 2 3 4 5 6 7 that shows whether
+        we want to retrieve the data based on cells, compound, dose, touchstone, clinical phase, moa or target.
+        0: cell_lines
+        1: compounds
+        2: doses
+        3: time
+        4: touchstone
+        5: clinical phase
+        6: moa
+        7: target
+        Default=0 (cell_lines)
+        -:params query (list): list of cells or compounds or doses or time or touchstone or clinical phase or MOA or target that we want to retrieve.
+        The list depends on the indicator. If the indicator is 0, you should enter the
+        list of desired cell lines and so on. Default=['MCF7']
+
+        -:param data (list): It must be a list with the following format:
+        line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type,
+        touchstone, clinical phase, moa, target)
+        line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+
+Output:
+        -:params parse_data (list): A list containing data that belongs to desired list.
+
+Note:
+If you provide the data argument, the function igonres the dataset_dir argument
+and returns output based on the provided data. Otherwise, it returns output
+based on dataset_dir.
+"""
 
   assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
