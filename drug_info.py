@@ -19,15 +19,15 @@ __email__ = "fooladi.hosein@gmail.com"
 def print_drug_statistics(drug_info_dir: str) -> None:
   """Print basic statisctics about drug repurposing hub
 
-    This function takes the directory of drug_info.txt
-    and print some information about perturbations.
+      This function takes the directory of drug_info.txt
+      and print some information about perturbations.
 
-    Parameters
-    ----------
-    drug_info_dir: str
-      The directory of drug_info file. E.g., './Data/repurposing_drugs_20180907.txt'
+      Parameters
+      ----------
+      drug_info_dir: str
+        The directory of drug_info file. E.g., './Data/repurposing_drugs_20180907.txt'
 
-    """
+  """
 
   assert isinstance(drug_info_dir,
                     str), "The dataset_dir must be a string object"
@@ -53,29 +53,29 @@ def drug_pert_retrieval(drug_info_dir: str,
                         pert_type: str = 'trt_cp') -> Tuple[pd.DataFrame, List]:
   """Mode of action and supplementary information of drugs.
 
-    This function takes the directory of drug_info.txt, pert_info.txt,
-    and pert_type; and return drug information correspondant to
-    perturbation information.
+      This function takes the directory of drug_info.txt, pert_info.txt,
+      and pert_type; and return drug information correspondant to
+      perturbation information.
 
-    Parameters
-    ----------
-    drug_info_dir: str
-      The directory of drug_info file. E.g., './Data/repurposing_drugs_20180907.txt'
-    pert_info_dir: str
-      The directory of pert_info file. E.g., './Data/pert_info.txt'
-    pert_type: str, optional (default 'trt_cp')
-      perturbation type that you want to extract information about it. Default='trt_cp'
+      Parameters
+      ----------
+      drug_info_dir: str
+        The directory of drug_info file. E.g., './Data/repurposing_drugs_20180907.txt'
+      pert_info_dir: str
+        The directory of pert_info file. E.g., './Data/pert_info.txt'
+      pert_type: str, optional (default 'trt_cp')
+        perturbation type that you want to extract information about it. Default='trt_cp'
 
-    Returns
-    -------
-    pert_supp_info: pandas.DataFrame
-      Pandas dataframe which contains supplementary information
-      about touchstone compounds such as mode of actions, targets and ...
-    pert_list: List[str]
-      List of strings which indicates the compounds that we have additional information for them.
-      Example: ['abiraterone', 'ABT-737', 'ABT-751', 'AC-55649',...]
+      Returns
+      -------
+      pert_supp_info: pandas.DataFrame
+        Pandas dataframe which contains supplementary information
+        about touchstone compounds such as mode of actions, targets and ...
+      pert_list: List[str]
+        List of strings which indicates the compounds that we have additional information for them.
+        Example: ['abiraterone', 'ABT-737', 'ABT-751', 'AC-55649',...]
 
-    """
+  """
 
   assert isinstance(drug_info_dir,
                     str), "The dataset_dir must be a string object"
@@ -92,7 +92,11 @@ def drug_pert_retrieval(drug_info_dir: str,
   assert pert_type in pert_info.pert_type.unique(
   ), "pert_type should be in the list of available perturbations"
 
-  x = pert_info[(pert_info.pert_type == pert_type) & (pert_info.is_touchstone)]
+  try:
+    x = pert_info[(pert_info.pert_type == pert_type) &
+                  (pert_info.is_touchstone)]
+  except AttributeError:
+    x = pert_info[(pert_info.pert_type == pert_type)]
 
   print("=================================================================")
   print("Number of Touchstone of {}: {}".format(pert_type, x.shape[0]))
