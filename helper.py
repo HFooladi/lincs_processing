@@ -6,24 +6,24 @@ __email__ = "fooladi.hosein@gmail.com"
 
 
 def sig_info_augment(sig_info_dir: str):
-  """ Unification between GSE70138 and GSE92742
+  """Unification between GSE70138 and GSE92742
 
-  This function has been written for working with GSE70138.
-  Unfortunately, format of sig_info (number of columns) differs between
-  GSE92742 and GSE70138. So, I have written this function for unification between 
-  these two dataset. Particularly, I am going to add 4 columns (pert_dose, pert_dose_unit,
-  pert_time, pert_time_unit) to sig_info of GSE70138.
-	
-  Parameters
-  ----------
-  sig_info_dir: str  
-    The directory of sig_info file. E.g., './Data/sig_info.txt'
-			
-  Returns
-  -------
-  sig_info_v1: pd.DataFrame 
-    A dataframe. It is like the input file, except it has four more columns.
-  """
+    This function has been written for working with GSE70138.
+    Unfortunately, format of sig_info (number of columns) differs between
+    GSE92742 and GSE70138. So, I have written this function for unification between
+    these two dataset. Particularly, I am going to add 4 columns (pert_dose, pert_dose_unit,
+    pert_time, pert_time_unit) to sig_info of GSE70138.
+
+    Parameters
+    ----------
+    sig_info_dir: str
+      The directory of sig_info file. E.g., './Data/sig_info.txt'
+
+    Returns
+    -------
+    sig_info_v1: pd.DataFrame
+      A dataframe. It is like the input file, except it has four more columns.
+    """
 
   assert isinstance(sig_info_dir,
                     str), "The dataset_dir must be a string object"
