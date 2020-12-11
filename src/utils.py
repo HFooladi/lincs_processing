@@ -4,6 +4,7 @@ from typing import List, Tuple, Union
 import pickle
 import random
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 from collections import Counter
 
@@ -611,6 +612,60 @@ def parse_dose_range(dataset_dir: str,
 
   print("Number of Data after parsing: {}".format(len(parse_data)))
   return parse_data
+
+
+def to_dataframe(data: Union[str, List]) -> pd.DataFrame:
+  '''This takes a list and produce a pandas datframe of data
+  
+  The input to this function is a list which contains metadata
+  (such as cell lines, compounds, ..) and gene expression. this
+  function returns a pandas dataframe where the first columns
+  belongs to gene expression and last four columns contain metaddata
+  cell line, compound, dose, and time in this order.
+  
+  Parameters
+  ----------
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
+    dataset should be a pickle file. e.g., valid argument is something like this:
+    './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+    
+  Returns
+  -------
+  pd.DataFrame
+    This is a pandas dataframe where the first columns contains
+    gene expression (978 or 12328-dimension) and the last four columns
+    contains cell line, pert_id, dose, and time
+    
+  '''
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
+      train = pickle.load(f)
+  else:
+    assert isinstance(data, list), "The data must be a list object"
+    train = data
+
+  genes = [line[1] for line in train]
+  cell_lines = [line[0][0] for line in train]
+  compounds = [line[0][1] for line in train]
+  doses = [line[0][3] for line in train]
+  times = [line[0][5] for line in train]
+
+  metadata = {
+      "cell_lines": cell_lines,
+      "compounds": compounds,
+      "doses": doses,
+      "times": times
+  }
+
+  data_df = pd.concat([pd.DataFrame(genes), pd.DataFrame(metadata)], axis=1)
+  return data_df
 
 
 def parse_list_v2(dataset_dir, indicator=0, query=['MCF7'], data=None):
