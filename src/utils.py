@@ -46,7 +46,7 @@ def write_pickle(dataset_dir: str, data: List) -> None:
   pickle.dump(data, fp)
 
 
-def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
+def print_statistics(data: Union[str, List]) -> None:
   """Print data statistics
 
   This function takes the directory of dataset and
@@ -54,30 +54,24 @@ def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
-
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
     line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
   """
-
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
 
   print("=================================================================")
   print("Data Loading..")
 
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -103,44 +97,37 @@ def print_statistics(dataset_dir: str, data: Union[None, List] = None) -> None:
   print("Number of unique times: {}".format(len(set(times))))
 
 
-def print_most_frequent(dataset_dir: str,
-                        n: int = 3,
-                        data: Union[None, List] = None) -> None:
+def print_most_frequent(data: Union[str, List], n: int = 3) -> None:
   """Print most frequent cell line, compounds, and does.
 
-  This function takes the directory of dataset and integer n
+  This function takes the directory of dataset (or a list object) and integer n
   and returns The n most frequent cell lines, compounds and
   doses in the dataset.
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
   n: int, optional (default 3)
     An integer which determine number of frequent statistics we want
     to retrieve. Default=3.
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
+  
   """
-
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
-  assert isinstance(n, int), "The parameter n must be an integer"
 
   print("=================================================================")
   print("Data Loading..")
 
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+  assert isinstance(n, int), "The parameter n must be an integer"
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -163,51 +150,43 @@ def print_most_frequent(dataset_dir: str,
   print("Most frequent Doses: {}".format(Counter(doses).most_common(n)))
 
 
-def cell_line_frequent(dataset_dir: str,
-                       n: int = 3,
-                       data: Union[None, List] = None) -> List:
+def cell_line_frequent(data: Union[str, List], n: int = 3) -> List:
   """Returns list of data belongs to most frequent cell lines
 
-  This function takes the directory of dataset and integer n,
+  This function takes the directory of dataset (or a list object) and integer n,
   and parse the data to keep only the data that belongs to n
   most frequent cell lines.
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   n: int, optional (default 3)
     An integer which determine number of frequent statistics we want
     to retrieve. Default=3.
-
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   Returns
   -------
   parse_data: List
     A list containing data that belongs to n most frequent cell lines.
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
-
   """
-
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
-  assert isinstance(n, int), "The parameter n must be an integer"
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(n, int), "The parameter n must be an integer"
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -237,49 +216,42 @@ def cell_line_frequent(dataset_dir: str,
   return parse_data
 
 
-def cell_line_list(dataset_dir: str,
-                   cells: List[str] = ['MCF7'],
-                   data: Union[None, List] = None) -> List:
+def cell_line_list(data: Union[str, List], cells: List[str] = ['MCF7']) -> List:
   """Filter data based on desired cell line list
 
-  This function takes the directory of dataset and a list cells,
+  This function takes the directory of dataset (or alist object) and a list cells,
   and parse the data to keep only the data that belongs to cells list.
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   cells: List[str]
     list of cell lines that we want to keep their data to retrieve. Default=['MCF7']
-
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   Returns
   -------
   parse_data: list
     A list containing data that belongs to desired list.
-
-
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
+    
   """
 
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(cells, list), "The parameter cells must be a list"
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -293,10 +265,9 @@ def cell_line_list(dataset_dir: str,
   return parse_data
 
 
-def parse_list(dataset_dir: str,
+def parse_list(data: Union[str, List],
                indicator: int = 0,
-               query=['MCF7'],
-               data: Union[None, List] = None) -> List:
+               query=['MCF7']) -> List:
   """Filter the data based on compound, cell line, dose or time
   
   This function takes the directory of dataset, indicator that indicates
@@ -307,10 +278,14 @@ def parse_list(dataset_dir: str,
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   indicator: int 
     it must be an integer from 0 1 2 and 3 that shows whether
@@ -325,25 +300,14 @@ def parse_list(dataset_dir: str,
     list of cells or compounds or doses that we want to retrieve.
     The list depends on the indicator. If the indicator is 0, you should enter the
     list of desired cell lines and so on. Default=['MCF7']
-    
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   Returns
   -------
   parse_data: List
     A list containing data that belongs to desired list.
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
   """
 
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
   assert indicator in [0, 1, 2,
                        3], "You should choose indicator from 0, 1, 2 range"
@@ -351,8 +315,11 @@ def parse_list(dataset_dir: str,
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -371,10 +338,9 @@ def parse_list(dataset_dir: str,
   return parse_data
 
 
-def parse_most_frequent(dataset_dir: str,
+def parse_most_frequent(data: Union[str, List],
                         indicator: int = 0,
-                        n: int = 3,
-                        data: Union[None, List] = None) -> List:
+                        n: int = 3) -> List:
   """Returns most frequent data (based on cell line, compound, ...)
   
   This function takes the directory of dataset, indicator that indicates
@@ -384,10 +350,14 @@ def parse_most_frequent(dataset_dir: str,
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   indicator: int, optional (default n=0) 
     It must be an integer from 0 1 2 and 3 that shows whether
@@ -402,25 +372,14 @@ def parse_most_frequent(dataset_dir: str,
     number of most frequent cells or compounds or doses that we want to retrieve.
     The list depends on the indicator. If the indicator is 0, you should enter the
     number of desired cell lines and so on. Default=3
-  
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   Returns
   -------
   parse_data: List
     A list containing data that belongs to desired list.
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
   """
 
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
   assert indicator in [0, 1, 2,
                        3], "You should choose indicator from 0, 1, 2, 3 range"
@@ -428,8 +387,11 @@ def parse_most_frequent(dataset_dir: str,
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -449,7 +411,7 @@ def parse_most_frequent(dataset_dir: str,
   print("Most frequent {}: {}".format(mapping_name[indicator],
                                       Counter(mylist).most_common(n)))
 
-  assert n < len(set(mylist)), "n is out of valid range!"
+  assert n <= len(set(mylist)), "n is out of valid range!"
 
   # List of n most frequent cell lines
   y = list(map(lambda x: x[0], Counter(mylist).most_common(n)))
@@ -459,11 +421,10 @@ def parse_most_frequent(dataset_dir: str,
   return parse_data
 
 
-def parse_chunk_frequent(dataset_dir: str,
+def parse_chunk_frequent(data: Union[str, List],
                          indicator: int = 0,
                          start: int = 0,
-                         end: int = 3,
-                         data: Union[None, List] = None) -> List:
+                         end: int = 3) -> List:
   """
   
   This function takes the directory of dataset, indicator that indicates
@@ -474,10 +435,14 @@ def parse_chunk_frequent(dataset_dir: str,
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   indicator: int, optional (default n=0) 
     It must be an integer from 0 1 2 and 3 that shows whether
@@ -493,24 +458,13 @@ def parse_chunk_frequent(dataset_dir: str,
   end: int 
     indicates the end of the list you want to subset. Default=3
 
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-
   Returns
   -------
   parse_data: List
     A list containing data that belongs to desired list.
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
   """
 
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(indicator, int), "The indicator must be an int object"
   assert indicator in [0, 1,
                        2], "You should choose indicator from 0, 1, 2 range"
@@ -520,8 +474,11 @@ def parse_chunk_frequent(dataset_dir: str,
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
@@ -551,10 +508,9 @@ def parse_chunk_frequent(dataset_dir: str,
   return parse_data
 
 
-def parse_dose_range(dataset_dir: str,
+def parse_dose_range(data: Union[str, List],
                      dose_min: int = 0,
-                     dose_max: int = 5,
-                     data: Union[None, List] = None) -> List:
+                     dose_max: int = 5) -> List:
   """
   
   This function takes the directory of dataset minimum and maximum dose
@@ -562,20 +518,19 @@ def parse_dose_range(dataset_dir: str,
 
   Parameters
   ----------
-  dataset_dir: str
-    It must be string file that shows the directory of the dataset.
+  data: Union[str, List]
+    the data can be a string which is the directory of the dataset.
     dataset should be a pickle file. e.g., valid argument is something like this:
     './Data/level3_trt_cp_landmark.pkl'
+    or it can be a list which contains the gene expression and metadata.
+    It must be a list of tuples with the following format:
+    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   dose_min: int, optional (default dose_min=0)
     minimum dose. Default=0
   dose_max: int, optional (default dose_max=5) 
     maximum_dose. Default=5
-
-  data: Union[None, List], optional (default 'None')
-    It must be a list with the following format:
-    line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
-    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
   Returns
   --------
@@ -583,22 +538,19 @@ def parse_dose_range(dataset_dir: str,
     A list containing data that belongs to desired list (
     Desired range of doses).
 
-  Note
-  -----
-  If you provide the data argument, the function igonres the dataset_dir argument
-  and returns output based on the provided data. Otherwise, it returns output
-  based on dataset_dir.
   """
 
-  assert isinstance(dataset_dir, str), "The dataset_dir must be a string object"
   assert isinstance(dose_min, int), "The parameter dose_min must be an integer"
   assert isinstance(dose_max, int), "The parameter dose_max must be an integer"
   assert dose_min < dose_max, "The minimum dose must be less than the maximum dose !!"
 
   print("=================================================================")
   print("Data Loading..")
-  if data is None:
-    with open(dataset_dir, "rb") as f:
+
+  assert isinstance(data,
+                    (str, list)), "The data should be string or list object"
+  if isinstance(data, str):
+    with open(data, "rb") as f:
       train = pickle.load(f)
   else:
     assert isinstance(data, list), "The data must be a list object"
