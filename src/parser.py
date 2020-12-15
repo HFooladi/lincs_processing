@@ -18,45 +18,45 @@ def parsing_level3_cp(dataset_dir: str,
                       landmarks: bool = True) -> List[List]:
   """Parsing the data to keep desired sig_ids
   
-	This function takes the directory of dataset, perturbation type, and
-	whether we want to only keep landmark genes or not. It returns a list
-	based on the inputs.
+  This function takes the directory of dataset, perturbation type, and
+  whether we want to only keep landmark genes or not. It returns a list
+  based on the inputs.
 
 
-	Parameters
+  Parameters
   ----------
-	dataset_dir: str
+  dataset_dir: str
     It must be string file that shows the directory of the dataset.
-		dataset should be a gctx file. e.g., valid argument is something like this:
-		'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
-	param inst_info_dir: str 
+    dataset should be a gctx file. e.g., valid argument is something like this:
+    './Data/Level3_INF_mlr12k_n1319138x12328.gctx'
+  param inst_info_dir: str 
     directory of inst_info. It contains the information about the
-		experiment, perturbation type and cell line. For example:
-		'./Data/inst_info.txt'
-	gene_info_dir: str 
+    experiment, perturbation type and cell line. For example:
+    './Data/inst_info.txt'
+  gene_info_dir: str 
     directory of gene_info. It contains the information about the genes.
     For example: './Data/gene_info.txt'
   pert_type: str (default= "trt_cp")
     String object that determine which perturbation type you want to parse.
-		Default='trt_cp'
-	landmarks: bool
+    Default='trt_cp'
+  landmarks: bool
     boolean which determines whether you want to just keep landmark genes
-		after parsing or you want to keep all the genes. Default=True
+    after parsing or you want to keep all the genes. Default=True
 
   Returns
-  -------
-	parse_list: List
-	  Output list (Train, Validation, Test) Format:
-		line[0]:(cell_line,
-					drug,
-					drug_type,
-					does,
-					does_type,
-					time,
-					time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+  ------
+  parse_list: List
+    Output list (Train, Validation, Test) Format:
+    line[0]:(cell_line,
+    drug,
+    drug_type,
+    does,
+    does_type,
+    time,
+    time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-	"""
+  """
 
   assert isinstance(pert_type, str), "pert_type must be a string object"
   assert isinstance(landmarks, bool), "landmarks must be a boolean object"
@@ -128,48 +128,48 @@ def parsing_level5_cp(dataset_dir: str,
                       cell_line: Optional[str] = None) -> List[List]:
   """Parsing the data to keep desired sig_ids
   
-	This function takes the directory of dataset, perturbation type, and
-	whether we want to only keep landmark genes or not. It returns a list
-	based on the inputs.
+  This function takes the directory of dataset, perturbation type, and
+  whether we want to only keep landmark genes or not. It returns a list
+  based on the inputs.
 
 
-	Parameters
+  Parameters
   ----------
-	dataset_dir: str
+  dataset_dir: str
     It must be string file that shows the directory of the dataset.
-		dataset should be a gctx file. e.g., valid argument is something like this:
-		'./Data/Level3_INF_mlr12k_n1319138x12328.gctx'
-	sig_info_dir: str 
+    dataset should be a gctx file. e.g., valid argument is something like this:
+    './Data/Level3_INF_mlr12k_n1319138x12328.gctx'
+  sig_info_dir: str 
     directory of sig_info. It contains the information about the
-		experiment, perturbation type and cell line. For example:
-		'./Data/sig_info.txt'
-	gene_info_dir: str
+    experiment, perturbation type and cell line. For example:
+    './Data/sig_info.txt'
+  gene_info_dir: str
     directory of gene_info. It contains the information about the genes.
-		For example: './Data/gene_info.txt'
-	pert_type: str (default="trt_cp") 
+    For example: './Data/gene_info.txt'
+  pert_type: str (default="trt_cp") 
     String object that determine which perturbation type you want to parse.
-		Default='trt_cp'
-	landmarks: bool (default=True)
+    Default='trt_cp'
+  landmarks: bool (default=True)
     boolean which determines whether you want to just keep landmark genes
-		after parsing or you want to keep all the genes. Default=True
+    after parsing or you want to keep all the genes. Default=True
   cell_line: str (default=None)
     Whether you want to select a particular cell_line and parse data just
     for that cell line or not. Default=None Which means parse information of all the cell lines.
 
-	Returns
+  Returns
   -------
-	parse_list: List
-		Output list (Train, Validation, Test) Format:
-		line[0]:(cell_line,
-					drug,
-					drug_type,
-					does,
-					does_type,
-					time,
-					time_type)
-		line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
+  parse_list: List
+    Output list (Train, Validation, Test) Format:
+    line[0]:(cell_line,
+    drug,
+    drug_type,
+    does,
+    does_type,
+    time,
+    time_type)
+    line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-	"""
+  """
 
   assert isinstance(pert_type, str), "pert_type must be a string object"
   assert isinstance(landmarks, bool), "landmarks must be a boolean object"
