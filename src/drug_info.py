@@ -18,7 +18,7 @@ __email__ = "fooladi.hosein@gmail.com"
 
 def print_drug_statistics(drug_info_dir: str) -> None:
   """Print basic statisctics about drug repurposing hub
-  
+
   This function takes the directory of drug_info.txt
   and print some information about perturbations.
 
@@ -46,6 +46,10 @@ def print_drug_statistics(drug_info_dir: str) -> None:
 
   print("Information about Number of drugs in different clinical phases: {}".
         format(Counter(drug_info.clinical_phase)))
+
+  targets = [str(targets).split("|") for targets in drug_info.target]
+  targets = set([item for items in targets for item in items])
+  print("Number of Unique targets: {}".format(len(targets)))
 
 
 def drug_pert_retrieval(drug_info_dir: str,
