@@ -20,10 +20,7 @@ class TestUtils(unittest.TestCase):
     parse_data = cell_line_list("dummy", cells, data=data)
     output_cells = [line[0][0] for line in parse_data]
     self.assertEqual(len(cells), len(list(set(output_cells))))
-    
-    
+
 
 if __name__ == '__main__':
-    unittest.main()
-    
-
+  unittest.main()
