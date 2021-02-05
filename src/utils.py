@@ -235,7 +235,7 @@ def cell_line_list(data: Union[str, List], cells: List[str] = ['MCF7']) -> List:
   Returns
   -------
   parse_data: list
-    A list containing data that belongs to desired list. 
+    A list containing data that belongs to desired list.
   """
 
   assert isinstance(cells, list), "The parameter cells must be a list"
@@ -264,7 +264,7 @@ def parse_list(data: Union[str, List],
                indicator: int = 0,
                query=['MCF7']) -> List:
   """Filter the data based on compound, cell line, dose or time
-  
+
   This function takes the directory of dataset, indicator that indicates
   whether you want to subset the data based on cell line, compound, dose, or time
   and a list which shows what part of the data you want to keep.
@@ -290,7 +290,7 @@ def parse_list(data: Union[str, List],
     2:doses
     3:time
     Default=0 (cell_lines)
-                  
+
   query: List
     list of cells or compounds or doses that we want to retrieve.
     The list depends on the indicator. If the indicator is 0, you should enter the
@@ -336,7 +336,7 @@ def parse_most_frequent(data: Union[str, List],
                         indicator: int = 0,
                         n: int = 3) -> List:
   """Returns most frequent data (based on cell line, compound, ...)
-  
+
   This function takes the directory of dataset, indicator that indicates
   whether you want to subset the data based on cell line, compound, dose, or time
   and a n which how much frequent items you want to keep.
@@ -353,7 +353,7 @@ def parse_most_frequent(data: Union[str, List],
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
     line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-  indicator: int, optional (default n=0) 
+  indicator: int, optional (default n=0)
     It must be an integer from 0 1 2 and 3 that shows whether
     we want to retrieve the data based on cells, compound or dose.
     0: cell_lines
@@ -361,7 +361,7 @@ def parse_most_frequent(data: Union[str, List],
     2:doses
     3:time
     Default=0
-                 
+
   n: int, optional (default n=3)
     number of most frequent cells or compounds or doses that we want to retrieve.
     The list depends on the indicator. If the indicator is 0, you should enter the
@@ -419,11 +419,11 @@ def parse_chunk_frequent(data: Union[str, List],
                          start: int = 0,
                          end: int = 3) -> List:
   """
-  
+
   This function takes the directory of dataset, indicator that indicates
   whether you want to subset the data based on cell line, compound, dose, or time
   and a start and end which shows what chunk of data is desirable.
-  E.g., if start=0 and end=3, you are subsetting 3 most frequent data. 
+  E.g., if start=0 and end=3, you are subsetting 3 most frequent data.
   The output will be a list of desired parsed dataset.
 
   Parameters
@@ -437,7 +437,7 @@ def parse_chunk_frequent(data: Union[str, List],
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
     line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-  indicator: int, optional (default n=0) 
+  indicator: int, optional (default n=0)
     It must be an integer from 0 1 2 and 3 that shows whether
     we want to retrieve the data based on cells, compound or dose.
     0: cell_lines
@@ -445,10 +445,10 @@ def parse_chunk_frequent(data: Union[str, List],
     2:doses
     3:time
     Default=0
-    
-  start: int 
+
+  start: int
     indicates the start of the list you want to subset. Default=0
-  end: int 
+  end: int
     indicates the end of the list you want to subset. Default=3
 
   Returns
@@ -504,7 +504,7 @@ def parse_dose_range(data: Union[str, List],
                      dose_min: int = 0,
                      dose_max: int = 5) -> List:
   """
-  
+
   This function takes the directory of dataset minimum and maximum dose
   and return a list of data that are within the desired range.
 
@@ -521,7 +521,7 @@ def parse_dose_range(data: Union[str, List],
 
   dose_min: int, optional (default dose_min=0)
     minimum dose. Default=0
-  dose_max: int, optional (default dose_max=5) 
+  dose_max: int, optional (default dose_max=5)
     maximum_dose. Default=5
 
   Returns
@@ -559,13 +559,13 @@ def parse_dose_range(data: Union[str, List],
 
 def to_dataframe(data: Union[str, List]) -> pd.DataFrame:
   """This takes a list and produce a pandas datframe of data
-  
+
   The input to this function is a list which contains metadata
   (such as cell lines, compounds, ..) and gene expression. this
   function returns a pandas dataframe where the first columns
   belongs to gene expression and last four columns contain metaddata
   cell line, compound, dose, and time in this order.
-  
+
   Parameters
   ----------
   data: Union[str, List]
@@ -576,13 +576,13 @@ def to_dataframe(data: Union[str, List]) -> pd.DataFrame:
     It must be a list of tuples with the following format:
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
     line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
-    
+
   Returns
   -------
   pd.DataFrame
     This is a pandas dataframe where the first columns contains
     gene expression (978 or 12328-dimension) and the last four columns
-    contains cell line, pert_id, dose, and time  
+    contains cell line, pert_id, dose, and time
   """
   assert isinstance(data,
                     (str, list)), "The data should be string or list object"
