@@ -1,9 +1,7 @@
 from __future__ import unicode_literals, print_function, division
-from typing import List, Tuple, Union
+from typing import List, Union
 
 import pickle
-import random
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from collections import Counter
@@ -117,7 +115,6 @@ def print_most_frequent(data: Union[str, List], n: int = 3) -> None:
   n: int, optional (default 3)
     An integer which determine number of frequent statistics we want
     to retrieve. Default=3.
-  
   """
 
   print("=================================================================")
@@ -176,7 +173,6 @@ def cell_line_frequent(data: Union[str, List], n: int = 3) -> List:
   -------
   parse_data: List
     A list containing data that belongs to n most frequent cell lines.
-
   """
 
   print("=================================================================")
@@ -239,8 +235,7 @@ def cell_line_list(data: Union[str, List], cells: List[str] = ['MCF7']) -> List:
   Returns
   -------
   parse_data: list
-    A list containing data that belongs to desired list.
-    
+    A list containing data that belongs to desired list. 
   """
 
   assert isinstance(cells, list), "The parameter cells must be a list"
@@ -287,7 +282,7 @@ def parse_list(data: Union[str, List],
     line[0]:(cell_line, drug, drug_type, does, does_type, time, time_type)
     line[1]: 978 or 12328-dimensional Vector(Gene_expression_profile)
 
-  indicator: int 
+  indicator: int
     it must be an integer from 0 1 2 and 3 that shows whether
     we want to retrieve the data based on cells, compound or dose.
     0: cell_lines
@@ -305,7 +300,6 @@ def parse_list(data: Union[str, List],
   -------
   parse_data: List
     A list containing data that belongs to desired list.
-
   """
 
   assert isinstance(indicator, int), "The indicator must be an int object"
@@ -377,7 +371,6 @@ def parse_most_frequent(data: Union[str, List],
   -------
   parse_data: List
     A list containing data that belongs to desired list.
-
   """
 
   assert isinstance(indicator, int), "The indicator must be an int object"
@@ -462,7 +455,6 @@ def parse_chunk_frequent(data: Union[str, List],
   -------
   parse_data: List
     A list containing data that belongs to desired list.
-
   """
 
   assert isinstance(indicator, int), "The indicator must be an int object"
@@ -537,7 +529,6 @@ def parse_dose_range(data: Union[str, List],
   parse_data: List
     A list containing data that belongs to desired list (
     Desired range of doses).
-
   """
 
   assert isinstance(dose_min, int), "The parameter dose_min must be an integer"
@@ -567,7 +558,7 @@ def parse_dose_range(data: Union[str, List],
 
 
 def to_dataframe(data: Union[str, List]) -> pd.DataFrame:
-  '''This takes a list and produce a pandas datframe of data
+  """This takes a list and produce a pandas datframe of data
   
   The input to this function is a list which contains metadata
   (such as cell lines, compounds, ..) and gene expression. this
@@ -591,9 +582,8 @@ def to_dataframe(data: Union[str, List]) -> pd.DataFrame:
   pd.DataFrame
     This is a pandas dataframe where the first columns contains
     gene expression (978 or 12328-dimension) and the last four columns
-    contains cell line, pert_id, dose, and time
-    
-  '''
+    contains cell line, pert_id, dose, and time  
+  """
   assert isinstance(data,
                     (str, list)), "The data should be string or list object"
   if isinstance(data, str):
