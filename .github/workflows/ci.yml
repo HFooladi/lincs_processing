@@ -21,7 +21,7 @@ jobs:
           enable-cache: true
 
       - name: Install
-        run: uv sync --all-groups --python ${{ matrix.python-version }}
+        run: uv sync --group dev --python ${{ matrix.python-version }}
 
       - name: Lint
         run: uv run ruff check .
@@ -30,7 +30,49 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Type check
-        run: uv run mypy src
+        run: uv run mypy src serve
 
       - name: Test
-        run: uv run pytest -q
+        run: uv run pytest -q --ignore=tests/pipeline
+
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: nf-core/setup-nextflow@v2
+        with:
+          version: "26.04.6"
+
+      # Everything goes into the project .venv; CPU torch keeps the runner small.
+      # Later steps call .venv/bin directly so uv does not re-sync the CUDA wheel.
+      - name: Install
+        run: |
+          uv sync --group dev --group pipeline --group serve --no-install-package torch
+          uv pip install torch --torch-backend cpu
+
+      - name: Pipeline unit tests
+        run: .venv/bin/pytest -q tests/pipeline
+
+      - name: Nextflow test profile
+        run: nextflow run . -profile test,venv
+
+      - name: Rerun is fully cached
+        run: |
+          nextflow run . -profile test,venv -resume
+          ! grep -q COMPLETED results/pipeline_info/trace.tsv
+
+      - name: Check outputs
+        run: |
+          test -s results/metrics/metrics.tsv
+          test -s results/metrics/gate_decision.json
+          ls results/packages/*/MODEL_CARD.md

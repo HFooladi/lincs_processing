@@ -127,5 +127,21 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# data folder
-data/
+# data folders (the committed synthetic fixture lives in tests/data)
+Data/
+/data/*
+!/data/raw/
+
+# Nextflow
+work/
+.nextflow/
+.nextflow.log*
+results/
+results_test/
+mlflow/
+
+# Raw LINCS files are tracked by DVC (data/raw/*.dvc), not git
+/data/raw/*
+!/data/raw/README.md
+!/data/raw/*.dvc
+!/data/raw/.gitignore

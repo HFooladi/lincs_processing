@@ -1,0 +1,54 @@
+# DVC runs the Nextflow workflow as one stage: the raw release and the code are
+# its dependencies, the dataset versions, split files and packages its outputs.
+# `dvc repro` reruns it when any of them changes; Nextflow's -resume then only
+# re-executes the tasks whose inputs actually changed. The data and split
+# hashes computed by the pipeline are also written into every MLflow run and
+# model card, so a run can always be traced back to `dvc.lock`.
+
+stages:
+  lincs:
+    cmd: >-
+      nextflow run . -profile docker,gpu -resume
+      --release beta
+      --gctx data/raw/beta/level5_beta_trt_cp_n720216x12328.gctx
+      --sig_info data/raw/beta/siginfo_beta.txt
+      --gene_info data/raw/beta/geneinfo_beta.txt
+      --pert_info data/raw/beta/compoundinfo_beta.txt
+      --outdir results
+    deps:
+      - data/raw/beta
+      - main.nf
+      - nextflow.config
+      - conf
+      - modules
+      - workflows
+      - containers/Dockerfile
+      - src/lincs_processing/pipeline
+    outs:
+      - results/data
+      - results/splits
+      - results/packages
+    metrics:
+      - results/metrics/gate_decision.json:
+          cache: false
+      - results/metrics/summary.tsv:
+          cache: false
+
+  # The same stage on the committed synthetic release, without containers.
+  lincs_test:
+    cmd: nextflow run . -profile test,venv -resume --outdir results_test
+    deps:
+      - tests/data/lincs_mini
+      - main.nf
+      - nextflow.config
+      - conf
+      - modules
+      - workflows
+      - src/lincs_processing/pipeline
+    outs:
+      - results_test/data
+      - results_test/splits
+      - results_test/packages
+    metrics:
+      - results_test/metrics/gate_decision.json:
+          cache: false
