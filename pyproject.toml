@@ -1,6 +1,6 @@
 [project]
 name = "lincs-processing"
-version = "0.2.0"
+version = "0.3.0"
 description = "Helpers for filtering and reshaping LINCS L1000 gene-expression data."
 readme = "README.md"
 license = { text = "MIT" }
@@ -15,6 +15,7 @@ dependencies = [
 
 [project.scripts]
 lincs-filter = "lincs_processing.filtering:main"
+lincs-pipeline = "lincs_processing.pipeline.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/HFooladi/lincs_processing"
@@ -25,6 +26,23 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.10",
     "pandas-stubs",
+    "dvc>=3.50",
+]
+# Everything the Nextflow processes need. Installed into the Docker image or
+# the project .venv (`uv sync --group pipeline`), never the base interpreter.
+pipeline = [
+    "anndata>=0.10",
+    "zarr>=2.18",
+    "pyarrow>=15",
+    "rdkit>=2024.3",
+    "torch>=2.7",
+    "mlflow>=2.16",
+]
+serve = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "gradio>=4.40",
+    "httpx>=0.27",
 ]
 
 [build-system]
@@ -43,6 +61,8 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::FutureWarning:cmapPy"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "serial",

@@ -14,11 +14,21 @@ __author__ = "Hosein Fooladi"
 __email__ = "fooladi.hosein@gmail.com"
 
 
-def _landmark_row_ids(gene_info_dir: str) -> pd.Series:
+def _landmark_row_ids(
+    gene_info_dir: str,
+    id_col: str = "gene_id",
+    flag_col: str = "is_lm",
+    flag_value: str = "1",
+) -> pd.Series:
+    """Row ids of the landmark genes.
+
+    The column names differ between releases: GEO uses ``pr_gene_id``/``pr_is_lm``
+    and the 2020 CLUE beta release uses ``gene_id``/``feature_space == "landmark"``.
+    """
     gene_info = pd.read_csv(gene_info_dir, sep="\t", dtype=str)
     print(f"Number of measured genes in the dataset: {gene_info.shape[0]}")
 
-    landmark_gene_row_ids = gene_info["gene_id"][gene_info["is_lm"] == "1"]
+    landmark_gene_row_ids = gene_info[id_col][gene_info[flag_col] == flag_value]
     print(f"Number of landmark genes in the dataset: {landmark_gene_row_ids.shape[0]}")
     return landmark_gene_row_ids
 

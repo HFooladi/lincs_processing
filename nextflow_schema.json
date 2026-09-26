@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/HFooladi/lincs_processing/master/nextflow_schema.json",
+  "title": "LINCS perturbation-prediction workflow parameters",
+  "type": "object",
+  "$defs": {
+    "input_options": {
+      "title": "Ingest",
+      "type": "object",
+      "properties": {
+        "release": {
+          "type": "string",
+          "description": "LINCS release layout of the raw files.",
+          "enum": [
+            "beta",
+            "gse92742",
+            "gse70138"
+          ],
+          "default": "beta"
+        },
+        "gctx": {
+          "type": "string",
+          "description": "Level-5 signature matrix (.gctx).",
+          "format": "file-path",
+          "exists": true
+        },
+        "sig_info": {
+          "type": "string",
+          "description": "Signature metadata (siginfo_beta.txt or GEO sig_info.txt).",
+          "format": "file-path",
+          "exists": true
+        },
+        "gene_info": {
+          "type": "string",
+          "description": "Gene metadata (geneinfo_beta.txt or GEO gene_info.txt).",
+          "format": "file-path",
+          "exists": true
+        },
+        "pert_info": {
+          "type": "string",
+          "description": "Compound metadata with SMILES (compoundinfo_beta.txt or GEO pert_info.txt).",
+          "format": "file-path",
+          "exists": true
+        },
+        "sig_metrics": {
+          "type": "string",
+          "description": "GEO sig_metrics table (required for gse92742/gse70138).",
+          "format": "file-path",
+          "exists": true
+        },
+        "drug_info": {
+          "type": "string",
+          "description": "Optional Drug Repurposing Hub export to fill MOA/target.",
+          "format": "file-path",
+          "exists": true
+        },
+        "pert_type": {
+          "type": "string",
+          "description": "Perturbation type to keep.",
+          "default": "trt_cp"
+        }
+      }
+    },
+    "qc_options": {
+      "title": "QC & filter",
+      "type": "object",
+      "properties": {
+        "min_cc_q75": {
+          "type": "number",
+          "description": "Minimum replicate agreement (cc_q75).",
+          "default": 0.2
+        },
+        "min_tas": {
+          "type": "number",
+          "description": "Minimum transcriptional activity score.",
+          "default": 0.0
+        },
+        "min_ss": {
+          "type": "number",
+          "description": "Minimum signature strength (release-specific scale; off by default)."
+        },
+        "min_rep": {
+          "type": "integer",
+          "description": "Minimum number of replicates per signature.",
+          "default": 2
+        },
+        "min_dose_um": {
+          "type": "number",
+          "description": "Minimum dose in µM."
+        },
+        "max_dose_um": {
+          "type": "number",
+          "description": "Maximum dose in µM."
+        },
+        "times_h": {
+          "type": "string",
+          "description": "Comma-separated time points (h) to keep."
+        }
+      }
+    },
+    "split_options": {
+      "title": "Split",
+      "type": "object",
+      "properties": {
+        "splits": {
+          "type": "string",
+          "description": "Comma-separated split types.",
+          "default": "cold_compound,cold_cell,cold_both",
+          "pattern": "^(cold_compound|cold_cell|cold_both)(,(cold_compound|cold_cell|cold_both))*$"
+        },
+        "split_seed": {
+          "type": "integer",
+          "description": "Seed of the group assignment.",
+          "default": 0
+        },
+        "val_frac": {
+          "type": "number",
+          "description": "Fraction of groups held out for validation.",
+          "default": 0.1,
+          "minimum": 0,
+          "maximum": 0.5
+        },
+        "test_frac": {
+          "type": "number",
+          "description": "Fraction of groups held out for test.",
+          "default": 0.2,
+          "minimum": 0.01,
+          "maximum": 0.5
+        }
+      }
+    },
+    "train_options": {
+      "title": "Fit & train",
+      "type": "object",
+      "properties": {
+        "seeds": {
+          "type": "string",
+          "description": "Comma-separated training seeds; one task per (split, seed).",
+          "default": "0,1,2",
+          "pattern": "^\\d+(,\\d+)*$"
+        },
+        "epochs": {
+          "type": "integer",
+          "description": "Maximum epochs.",
+          "default": 50
+        },
+        "batch_size": {
+          "type": "integer",
+          "description": "Mini-batch size.",
+          "default": 512
+        },
+        "lr": {
+          "type": "number",
+          "description": "Learning rate.",
+          "default": 0.001
+        },
+        "weight_decay": {
+          "type": "number",
+          "description": "AdamW weight decay.",
+          "default": 0.0001
+        },
+        "patience": {
+          "type": "integer",
+          "description": "Early-stopping patience (epochs).",
+          "default": 5
+        },
+        "hidden": {
+          "type": "integer",
+          "description": "Hidden width.",
+          "default": 1024
+        },
+        "layers": {
+          "type": "integer",
+          "description": "Hidden layers.",
+          "default": 2
+        },
+        "dropout": {
+          "type": "number",
+          "description": "Dropout.",
+          "default": 0.2
+        },
+        "batch_correction": {
+          "type": "string",
+          "description": "Batch correction fitted on the training fold.",
+          "enum": [
+            "none",
+            "cell_center"
+          ],
+          "default": "cell_center"
+        },
+        "cell_features": {
+          "type": "string",
+          "description": "Optional TSV of cell-line features (cell_id x features), e.g. CCLE baseline expression.",
+          "format": "file-path",
+          "exists": true
+        },
+        "device": {
+          "type": "string",
+          "description": "Torch device: auto, cpu, cuda or cuda:N.",
+          "default": "auto"
+        }
+      }
+    },
+    "tracking_options": {
+      "title": "Tracking & registry gate",
+      "type": "object",
+      "properties": {
+        "tracker": {
+          "type": "string",
+          "description": "Experiment tracker.",
+          "enum": [
+            "mlflow",
+            "wandb",
+            "none"
+          ],
+          "default": "mlflow"
+        },
+        "experiment": {
+          "type": "string",
+          "description": "MLflow experiment / W&B project.",
+          "default": "lincs-perturbation"
+        },
+        "mlflow_dir": {
+          "type": "string",
+          "description": "Directory of the default SQLite MLflow store.",
+          "format": "directory-path"
+        },
+        "mlflow_uri": {
+          "type": "string",
+          "description": "MLflow tracking URI (overrides mlflow_dir)."
+        },
+        "model_name": {
+          "type": "string",
+          "description": "Registered model name.",
+          "default": "lincs-perturbation"
+        },
+        "gate_split": {
+          "type": "string",
+          "description": "Split type the registry gate checks.",
+          "default": "cold_cell"
+        },
+        "gate_metric": {
+          "type": "string",
+          "description": "Metric the gate compares.",
+          "default": "pearson_mean"
+        },
+        "gate_margin": {
+          "type": "number",
+          "description": "Required margin over the training-mean baseline.",
+          "default": 0.0
+        },
+        "gate_strict": {
+          "type": "boolean",
+          "description": "Fail the run when the gate fails.",
+          "default": false
+        }
+      }
+    },
+    "infrastructure_options": {
+      "title": "Infrastructure",
+      "type": "object",
+      "properties": {
+        "outdir": {
+          "type": "string",
+          "description": "Output directory.",
+          "format": "directory-path",
+          "default": "results"
+        },
+        "container": {
+          "type": "string",
+          "description": "Container image for all processes.",
+          "default": "lincs-processing:0.3.0"
+        },
+        "max_gpu_jobs": {
+          "type": "integer",
+          "description": "Maximum concurrent training tasks.",
+          "default": 3
+        },
+        "max_cpus": {
+          "type": "integer",
+          "description": "Unused cap kept for nf-core compatibility.",
+          "default": 16
+        },
+        "max_memory": {
+          "type": "string",
+          "description": "Unused cap kept for nf-core compatibility.",
+          "default": "128.GB"
+        },
+        "awsbatch_queue": {
+          "type": "string",
+          "description": "AWS Batch queue (awsbatch profile)."
+        },
+        "aws_region": {
+          "type": "string",
+          "description": "AWS region (awsbatch profile).",
+          "default": "eu-west-1"
+        },
+        "slurm_partition": {
+          "type": "string",
+          "description": "Slurm CPU partition (slurm profile)."
+        },
+        "slurm_gpu_partition": {
+          "type": "string",
+          "description": "Slurm GPU partition (slurm profile)."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/input_options"
+    },
+    {
+      "$ref": "#/$defs/qc_options"
+    },
+    {
+      "$ref": "#/$defs/split_options"
+    },
+    {
+      "$ref": "#/$defs/train_options"
+    },
+    {
+      "$ref": "#/$defs/tracking_options"
+    },
+    {
+      "$ref": "#/$defs/infrastructure_options"
+    }
+  ]
+}

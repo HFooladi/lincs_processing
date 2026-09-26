@@ -1,0 +1,9 @@
+.git
+.venv
+.nextflow*
+work
+results
+mlflow
+data
+tests
+*.png
