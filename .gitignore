@@ -138,7 +138,9 @@ work/
 .nextflow.log*
 results/
 results_test/
+results_*/
 mlflow/
+mlflow_*/
 
 # Raw LINCS files are tracked by DVC (data/raw/*.dvc), not git
 /data/raw/*
